@@ -10,7 +10,7 @@
   "main": "./src/main.ts",
   "scripts": {
     "dev": "nodemon",
-    "start": "node dist/main.js",
+    "start": "node dist/tsc/main.js",
     "lint": "eslint src/ --ext .js,.jsx,.ts,.tsx",
     "clean": "rm -rf dist build package",
     "ts-node": "ts-node",
