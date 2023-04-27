@@ -1,6 +1,7 @@
 {
   "version": "1.0.0",
-  "name": "basic-ts-boiler",
+  "name": "themeparktrekker",
+  "type": "module",
   "keywords": [
     "boilderplate"
   ],
@@ -10,7 +11,7 @@
   "main": "./src/main.ts",
   "scripts": {
     "dev": "nodemon",
-    "start": "node dist/main.ts",
+    "start": "node dist/tsc/src/main.js",
     "postinstall": "tsc",
     "watch-node": "nodemon dist/main.ts",
     "watch-ts": "tsc -w",
