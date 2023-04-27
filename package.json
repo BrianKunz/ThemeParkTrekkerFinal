@@ -13,7 +13,7 @@
     "dev": "nodemon",
     "start": "node dist/tsc/src/main.js",
     "postinstall": "tsc",
-    "watch-node": "nodemon dist/main.ts",
+    "watch-node": "nodemon dist/tsc/src/main.js",
     "watch-ts": "tsc -w",
     "deploy": "git add . && git commit -m Heroku && git push heroku master",
     "lint": "eslint src/ --ext .js,.jsx,.ts,.tsx",
