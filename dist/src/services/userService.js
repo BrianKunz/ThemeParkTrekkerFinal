@@ -21,7 +21,7 @@ exports.userService = {
         sessionStorage.setItem("userId", userId);
         return response.data;
     }),
-    getCurrentUser: () => {
+    getCurrentUser: () => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
         const userString = sessionStorage.getItem("user");
         if (userString) {
             return JSON.parse(userString);
@@ -29,6 +29,6 @@ exports.userService = {
         else {
             return null;
         }
-    },
+    }),
 };
 //# sourceMappingURL=userService.js.map
