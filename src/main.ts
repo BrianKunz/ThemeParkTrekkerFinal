@@ -23,7 +23,7 @@ app.get("/favicon.ico", (_, res) => {
 });
 
 app.get("*", (_, res) => {
-  res.sendFile(path.join(__dirname, "..", "dist", "src", "index.html"));
+  res.sendFile(path.join(__dirname, "..", "dist", "index.html"));
 });
 
 const corsOptions = {
