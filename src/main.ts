@@ -11,7 +11,7 @@ import cors from "cors";
 const session = require("express-session");
 const secret = process.env.SESSION_SECRET || "default-secret";
 
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 3000;
 
 const app = express();
 
