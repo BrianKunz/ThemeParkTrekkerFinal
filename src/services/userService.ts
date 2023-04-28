@@ -20,7 +20,7 @@ export const userService = {
     sessionStorage.setItem("userId", userId);
     return response.data;
   },
-  getCurrentUser: (): User | null => {
+  getCurrentUser: async () => {
     const userString = sessionStorage.getItem("user");
     if (userString) {
       return JSON.parse(userString);
