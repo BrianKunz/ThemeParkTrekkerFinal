@@ -4,6 +4,7 @@ const tslib_1 = require("tslib");
 const dotenv_1 = tslib_1.__importDefault(require("dotenv"));
 dotenv_1.default.config();
 const express_1 = tslib_1.__importDefault(require("express"));
+const path_1 = tslib_1.__importDefault(require("path"));
 const user_controller_1 = tslib_1.__importDefault(require("./controllers/user.controller"));
 const post_controller_1 = tslib_1.__importDefault(require("./controllers/post.controller"));
 const trip_controller_1 = tslib_1.__importDefault(require("./controllers/trip.controller"));
@@ -13,10 +14,14 @@ const cors_1 = tslib_1.__importDefault(require("cors"));
 const session = require("express-session");
 // import session from "express-session";
 const secret = process.env.SESSION_SECRET || "default-secret";
-const PORT = 3001;
+const PORT = 3000;
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
 app.use((0, morgan_1.default)("dev"));
+app.use(express_1.default.static(path_1.default.join(__dirname, "..", "build")));
+app.get("*", (_, res) => {
+    res.sendFile(path_1.default.join(__dirname, "..", "build", "index.html"));
+});
 const corsOptions = {
     origin: "*",
 };

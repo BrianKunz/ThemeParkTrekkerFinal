@@ -1,6 +1,7 @@
 import dotenv from "dotenv";
 dotenv.config();
 import express from "express";
+import path from "path";
 import userController from "./controllers/user.controller";
 import postController from "./controllers/post.controller";
 import tripController from "./controllers/trip.controller";
@@ -11,12 +12,18 @@ const session = require("express-session");
 // import session from "express-session";
 const secret = process.env.SESSION_SECRET || "default-secret";
 
-const PORT = 3001;
+const PORT = 3000;
 
 const app = express();
 
 app.use(express.json());
 app.use(morgan("dev"));
+
+app.use(express.static(path.join(__dirname, "..", "build")));
+
+app.get("*", (_, res) => {
+  res.sendFile(path.join(__dirname, "..", "build", "index.html"));
+});
 
 const corsOptions = {
   origin: "*",

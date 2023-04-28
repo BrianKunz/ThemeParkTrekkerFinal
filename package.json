@@ -9,11 +9,11 @@
   "description": "",
   "main": "src/main.ts",
   "scripts": {
-    "server": "nodemon",
-    "frontend": "nodemon src/index.tsx",
-    "start": "node dist/src/index.js",
-    "backend": "nodemon src/main.ts",
-    "build": "tsc",
+    "start": "node dist/src/main.js",
+    "build:frontend": "react-scripts build",
+    "build:backend": "tsc",
+    "build": "yarn build:frontend && yarn build:backend",
+    "postinstall": "yarn build",
     "watch-node": "nodemon dist/tsc/src/main.js",
     "watch-ts": "tsc -w",
     "lint": "eslint src/ --ext .js,.jsx,.ts,.tsx",
@@ -71,5 +71,17 @@
     "ts-jest": "^28.0.3",
     "ts-node": "^10.9.1",
     "typedoc": "^0.22.15"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }
