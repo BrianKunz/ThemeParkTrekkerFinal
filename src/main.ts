@@ -18,6 +18,10 @@ const app = express();
 app.use(express.json());
 app.use(morgan("dev"));
 
+app.get("/favicon.ico", (_, res) => {
+  res.status(204).end();
+});
+
 app.use(
   "/static",
   express.static(path.join(__dirname, "..", "..", "build", "static"))
