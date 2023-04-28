@@ -1,4 +1,3 @@
-import React from "react";
 import { useCreateUser } from "./useCreateUser";
 import NavBar from "../../NavBar/NavBar";
 

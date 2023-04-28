@@ -1,4 +1,3 @@
-import React from "react";
 import { useCreateTrip } from "./useCreateTrip";
 import { DayPicker } from "react-day-picker";
 

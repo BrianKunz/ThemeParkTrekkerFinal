@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useTripStore } from "../../stores/useTripStore";
 import { Trip } from "./Trip";
 import CreateTrip from "./CreateTrip/CreateTrip";

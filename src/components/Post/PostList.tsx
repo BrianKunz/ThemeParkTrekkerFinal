@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { usePostStore } from "../../stores/usePostStore";
 import CreatePost from "./CreatePost/CreatePost";
 import NavBar from "../NavBar/NavBar";

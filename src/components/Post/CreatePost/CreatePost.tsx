@@ -1,4 +1,3 @@
-import React from "react";
 import { useCreatePost } from "./useCreatePost";
 
 export default function CreatePost() {
