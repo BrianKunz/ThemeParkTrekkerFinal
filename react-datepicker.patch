@@ -1,0 +1,18 @@
+--- node_modules/react-datepicker/dist/react-datepicker.css.orig	2023-04-28 02:06:06.841845400 -0400
++++ node_modules/react-datepicker/dist/react-datepicker.css	2023-04-28 02:28:16.067208000 -0400
+@@ -1,4 +1,3 @@
+-@charset "UTF-8";
+ .react-datepicker__year-read-view--down-arrow,
+ .react-datepicker__month-read-view--down-arrow,
+ .react-datepicker__month-year-read-view--down-arrow, .react-datepicker__navigation-icon::before {
+@@ -292,7 +291,9 @@
+   margin: 0;
+ }
+ .react-datepicker__input-time-container .react-datepicker-time__input-container .react-datepicker-time__input input[type=time] {
+-  -moz-appearance: textfield;
++  -webkit-appearance: none;
++  -moz-appearance: none;
++  appearance: none;
+ }
+ .react-datepicker__input-time-container .react-datepicker-time__input-container .react-datepicker-time__delimiter {
+   margin-left: 5px;
