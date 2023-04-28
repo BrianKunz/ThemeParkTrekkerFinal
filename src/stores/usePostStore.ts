@@ -14,9 +14,10 @@ interface PostStore {
   updatePost: (post: Post) => Promise<void>;
   deletePost: (id: string) => Promise<void>;
 }
+
 export const usePostStore = create<PostStore>((set, get) => ({
   posts: [],
-  user: userService.getCurrentUser(),
+  user: null,
   getAllPosts: async () => {
     try {
       const posts = await postService.getAll();
@@ -38,7 +39,8 @@ export const usePostStore = create<PostStore>((set, get) => ({
 
   createNewPost: async (post) => {
     try {
-      const { getAllPosts, user } = get();
+      const { getAllPosts } = get();
+      const user = await userService.getCurrentUser();
       if (user) {
         await postService.create({ ...post, user });
         await getAllPosts();

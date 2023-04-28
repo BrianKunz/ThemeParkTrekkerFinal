@@ -7,7 +7,7 @@ const postService_1 = require("../services/postService");
 const userService_1 = require("../services/userService");
 exports.usePostStore = (0, zustand_1.create)((set, get) => ({
     posts: [],
-    user: userService_1.userService.getCurrentUser(),
+    user: null,
     getAllPosts: () => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
         try {
             const posts = yield postService_1.postService.getAll();
@@ -30,7 +30,8 @@ exports.usePostStore = (0, zustand_1.create)((set, get) => ({
     }),
     createNewPost: (post) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
         try {
-            const { getAllPosts, user } = get();
+            const { getAllPosts } = get();
+            const user = yield userService_1.userService.getCurrentUser();
             if (user) {
                 yield postService_1.postService.create(Object.assign(Object.assign({}, post), { user }));
                 yield getAllPosts();

@@ -17,7 +17,7 @@ interface TripStore {
 
 export const useTripStore = create<TripStore>((set, get) => ({
   trips: [],
-  user: userService.getCurrentUser(),
+  user: null,
   getAllTrips: async () => {
     try {
       const { user } = get();
@@ -41,7 +41,8 @@ export const useTripStore = create<TripStore>((set, get) => ({
   },
   createNewTrip: async (trip) => {
     try {
-      const { getAllTrips, user } = get();
+      const { getAllTrips } = get();
+      const user = await userService.getCurrentUser();
       await tripService.create({ ...trip, user: user ?? undefined });
       await getAllTrips();
     } catch (error) {

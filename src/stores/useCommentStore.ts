@@ -16,13 +16,12 @@ interface CommentStore {
 
 export const useCommentStore = create<CommentStore>((set, get) => ({
   comments: [],
-  user: userService.getCurrentUser() || { id: "", username: "", email: "" },
+  user: null,
   getAllComments: async (post) => {
     try {
       const comments = await commentService.getAll();
       const filteredComments = comments.filter((comment: Comment) => {
-        //@ts-ignore
-        return comment.post === post?.id; // Use type guard to check if post is undefined
+        return comment.post?.id === post?.id;
       });
       set({ comments: filteredComments });
     } catch (error) {
@@ -32,7 +31,7 @@ export const useCommentStore = create<CommentStore>((set, get) => ({
   createNewComment: async (comment, post) => {
     try {
       const { getAllComments } = get();
-      const { user } = get();
+      const user = await userService.getCurrentUser();
       await commentService.create({
         ...comment,
         user,

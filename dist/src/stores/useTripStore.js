@@ -7,7 +7,7 @@ const tripService_1 = require("../services/tripService");
 const userService_1 = require("../services/userService");
 exports.useTripStore = (0, zustand_1.create)((set, get) => ({
     trips: [],
-    user: userService_1.userService.getCurrentUser(),
+    user: null,
     getAllTrips: () => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
         try {
             const { user } = get();
@@ -31,7 +31,8 @@ exports.useTripStore = (0, zustand_1.create)((set, get) => ({
     }),
     createNewTrip: (trip) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
         try {
-            const { getAllTrips, user } = get();
+            const { getAllTrips } = get();
+            const user = yield userService_1.userService.getCurrentUser();
             yield tripService_1.tripService.create(Object.assign(Object.assign({}, trip), { user: user !== null && user !== void 0 ? user : undefined }));
             yield getAllTrips();
         }

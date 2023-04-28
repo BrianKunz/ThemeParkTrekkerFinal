@@ -24,7 +24,8 @@ exports.userService = {
     getCurrentUser: () => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
         const userString = sessionStorage.getItem("user");
         if (userString) {
-            return JSON.parse(userString);
+            const user = JSON.parse(userString);
+            return user;
         }
         else {
             return null;

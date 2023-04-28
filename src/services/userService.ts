@@ -23,7 +23,8 @@ export const userService = {
   getCurrentUser: async () => {
     const userString = sessionStorage.getItem("user");
     if (userString) {
-      return JSON.parse(userString);
+      const user = JSON.parse(userString);
+      return user as User;
     } else {
       return null;
     }

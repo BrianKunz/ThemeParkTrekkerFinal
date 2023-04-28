@@ -7,13 +7,13 @@ const commentService_1 = require("../services/commentService");
 const userService_1 = require("../services/userService");
 exports.useCommentStore = (0, zustand_1.create)((set, get) => ({
     comments: [],
-    user: userService_1.userService.getCurrentUser() || { id: "", username: "", email: "" },
+    user: null,
     getAllComments: (post) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
         try {
             const comments = yield commentService_1.commentService.getAll();
             const filteredComments = comments.filter((comment) => {
-                //@ts-ignore
-                return comment.post === (post === null || post === void 0 ? void 0 : post.id); // Use type guard to check if post is undefined
+                var _a;
+                return ((_a = comment.post) === null || _a === void 0 ? void 0 : _a.id) === (post === null || post === void 0 ? void 0 : post.id);
             });
             set({ comments: filteredComments });
         }
@@ -24,7 +24,7 @@ exports.useCommentStore = (0, zustand_1.create)((set, get) => ({
     createNewComment: (comment, post) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
         try {
             const { getAllComments } = get();
-            const { user } = get();
+            const user = yield userService_1.userService.getCurrentUser();
             yield commentService_1.commentService.create(Object.assign(Object.assign({}, comment), { user,
                 post }));
             yield getAllComments(post);
