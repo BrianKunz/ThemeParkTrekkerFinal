@@ -45,7 +45,7 @@
     "typeorm": "^0.3.15",
     "typescript": "^5.0.4",
     "uuid": "^9.0.0",
-    "web-vitals-reporter": "^1.0.0",
+    "webpack": "^5.81.0",
     "zustand": "^4.3.7"
   },
   "devDependencies": {
