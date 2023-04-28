@@ -11,7 +11,7 @@
   "scripts": {
     "server": "nodemon",
     "frontend": "nodemon src/index.tsx",
-    "start": "node build/index.js",
+    "start": "node dist/src/index.js",
     "backend": "nodemon src/main.ts",
     "build": "tsc",
     "watch-node": "nodemon dist/tsc/src/main.js",
