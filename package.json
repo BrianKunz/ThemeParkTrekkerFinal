@@ -14,6 +14,7 @@
     "start": "node dist/src/index.js",
     "backend": "nodemon src/main.ts",
     "build": "tsc",
+    "postinstall": "patch node_modules/react-datepicker/dist/react-datepicker.css < fix-datepicker.patch",
     "watch-node": "nodemon dist/tsc/src/main.js",
     "watch-ts": "tsc -w",
     "lint": "eslint src/ --ext .js,.jsx,.ts,.tsx",
