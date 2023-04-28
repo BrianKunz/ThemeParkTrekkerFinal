@@ -1,3 +1,4 @@
+import React from "react";
 import { useCreateComment } from "./useCreateComment";
 import { Post } from "../../../entities/Post.entity";
 import { User } from "../../../entities/User.entity";

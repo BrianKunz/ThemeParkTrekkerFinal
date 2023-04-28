@@ -5,51 +5,51 @@ const tslib_1 = require("tslib");
 const axios_1 = tslib_1.__importDefault(require("axios"));
 const baseURL = "https://themeparktrekker.herokuapp.com/trips/";
 exports.tripService = {
-    getAll: async () => {
+    getAll: () => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
         const token = sessionStorage.getItem("accessToken");
-        console.log(token); // Log the token to the console
-        const response = await axios_1.default.get(baseURL, {
+        console.log(token);
+        const response = yield axios_1.default.get(baseURL, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
         });
         console.log(response);
         return response.data;
-    },
-    getOne: async (id) => {
+    }),
+    getOne: (id) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
         const token = sessionStorage.getItem("accessToken");
-        const response = await axios_1.default.get(baseURL + id, {
+        const response = yield axios_1.default.get(baseURL + id, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
         });
         return response.data;
-    },
-    create: async (trip) => {
+    }),
+    create: (trip) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
         const token = sessionStorage.getItem("accessToken");
-        const response = await axios_1.default.post(baseURL, trip, {
+        const response = yield axios_1.default.post(baseURL, trip, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
         });
         return response.data;
-    },
-    update: async (id, trip) => {
+    }),
+    update: (id, trip) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
         const token = sessionStorage.getItem("accessToken");
-        const response = await axios_1.default.put(baseURL + id, trip, {
+        const response = yield axios_1.default.put(baseURL + id, trip, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
         });
         return response.data;
-    },
-    delete: async (id) => {
+    }),
+    delete: (id) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
         const token = sessionStorage.getItem("accessToken");
-        await axios_1.default.delete(baseURL + id, {
+        yield axios_1.default.delete(baseURL + id, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
         });
-    },
+    }),
 };
 //# sourceMappingURL=tripService.js.map

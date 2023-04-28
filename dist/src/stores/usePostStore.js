@@ -1,24 +1,25 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.usePostStore = void 0;
+const tslib_1 = require("tslib");
 const zustand_1 = require("zustand");
 const postService_1 = require("../services/postService");
 const userService_1 = require("../services/userService");
 exports.usePostStore = (0, zustand_1.create)((set, get) => ({
     posts: [],
     user: null,
-    getAllPosts: async () => {
+    getAllPosts: () => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
         try {
-            const posts = await postService_1.postService.getAll();
+            const posts = yield postService_1.postService.getAll();
             set({ posts });
         }
         catch (error) {
             console.error(error);
         }
-    },
-    getOnePost: async (id) => {
+    }),
+    getOnePost: (id) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
         try {
-            const post = await postService_1.postService.getOne(id);
+            const post = yield postService_1.postService.getOne(id);
             set({ post });
             return post;
         }
@@ -26,37 +27,37 @@ exports.usePostStore = (0, zustand_1.create)((set, get) => ({
             console.error(error);
             return undefined;
         }
-    },
-    createNewPost: async (post) => {
+    }),
+    createNewPost: (post) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
         try {
             const { getAllPosts } = get();
-            const user = await userService_1.userService.getCurrentUser();
+            const user = yield userService_1.userService.getCurrentUser();
             if (user) {
-                await postService_1.postService.create({ ...post, user });
-                await getAllPosts();
+                yield postService_1.postService.create(Object.assign(Object.assign({}, post), { user }));
+                yield getAllPosts();
             }
         }
         catch (error) {
             console.error(error);
         }
-    },
-    updatePost: async (post) => {
+    }),
+    updatePost: (post) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
         try {
-            await postService_1.postService.update(post.id, post);
-            await get().getAllPosts();
+            yield postService_1.postService.update(post.id, post);
+            yield get().getAllPosts();
         }
         catch (error) {
             console.error(error);
         }
-    },
-    deletePost: async (id) => {
+    }),
+    deletePost: (id) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
         try {
-            await postService_1.postService.delete(id);
-            await get().getAllPosts();
+            yield postService_1.postService.delete(id);
+            yield get().getAllPosts();
         }
         catch (error) {
             console.error(error);
         }
-    },
+    }),
 }));
 //# sourceMappingURL=usePostStore.js.map

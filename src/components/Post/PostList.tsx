@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+import * as React from "react";
 import { useEffect } from "react";
 import { usePostStore } from "../../stores/usePostStore";
 import CreatePost from "./CreatePost/CreatePost";

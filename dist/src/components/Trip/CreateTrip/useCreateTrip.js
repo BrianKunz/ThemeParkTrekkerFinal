@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.useCreateTrip = void 0;
+const tslib_1 = require("tslib");
 const react_1 = require("react");
 const useTripStore_1 = require("../../../stores/useTripStore");
 const uuid_1 = require("uuid");
@@ -15,18 +16,15 @@ function useCreateTrip() {
     const [loading, setLoading] = (0, react_1.useState)(false);
     const { createNewTrip } = (0, useTripStore_1.useTripStore)();
     const handleFormChange = ({ target: { name, value }, }) => {
-        setFormInputs((prevState) => ({
-            ...prevState,
-            [name]: value,
-        }));
+        setFormInputs((prevState) => (Object.assign(Object.assign({}, prevState), { [name]: value })));
     };
-    const handleSubmit = async () => {
+    const handleSubmit = () => tslib_1.__awaiter(this, void 0, void 0, function* () {
         if (loading) {
             return;
         }
         try {
             setLoading(true);
-            await createNewTrip({
+            yield createNewTrip({
                 id: (0, uuid_1.v4)(),
                 date: formInputs.date,
                 title: formInputs.title,
@@ -48,7 +46,7 @@ function useCreateTrip() {
         finally {
             setLoading(false);
         }
-    };
+    });
     return {
         handleSubmit,
         handleFormChange,

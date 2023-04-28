@@ -6,6 +6,38 @@ const typeorm_1 = require("typeorm");
 const Post_entity_1 = require("./Post.entity");
 const User_entity_1 = require("./User.entity");
 let Comment = class Comment {
+    constructor() {
+        Object.defineProperty(this, "id", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: void 0
+        });
+        Object.defineProperty(this, "time", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: void 0
+        });
+        Object.defineProperty(this, "body", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: void 0
+        });
+        Object.defineProperty(this, "post", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: void 0
+        });
+        Object.defineProperty(this, "user", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: void 0
+        });
+    }
 };
 tslib_1.__decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)(),
@@ -25,7 +57,7 @@ tslib_1.__decorate([
 ], Comment.prototype, "post", void 0);
 tslib_1.__decorate([
     (0, typeorm_1.ManyToOne)(() => User_entity_1.User, (user) => user.trips),
-    tslib_1.__metadata("design:type", User_entity_1.User)
+    tslib_1.__metadata("design:type", Object)
 ], Comment.prototype, "user", void 0);
 Comment = tslib_1.__decorate([
     (0, typeorm_1.Entity)()

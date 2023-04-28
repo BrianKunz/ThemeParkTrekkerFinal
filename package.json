@@ -10,9 +10,8 @@
   "main": "src/main.ts",
   "scripts": {
     "start": "node dist/src/main.js",
-    "build:frontend": "react-scripts build",
+    "build": "webpack --config webpack.config.js",
     "build:backend": "tsc",
-    "build": "yarn build:frontend && yarn build:backend",
     "postinstall": "yarn build",
     "watch-node": "nodemon dist/tsc/src/main.js",
     "watch-ts": "tsc -w",
@@ -67,12 +66,16 @@
     "@types/uuid": "^9.0.1",
     "@typescript-eslint/eslint-plugin": "^5.26.0",
     "@typescript-eslint/parser": "^5.26.0",
+    "css-loader": "^6.7.3",
     "esbuild": "^0.14.41",
     "eslint": "^8.16.0",
     "jest": "^28.1.0",
+    "style-loader": "^3.3.2",
     "ts-jest": "^28.0.3",
+    "ts-loader": "^9.4.2",
     "ts-node": "^10.9.1",
-    "typedoc": "^0.22.15"
+    "typedoc": "^0.22.15",
+    "webpack-cli": "^5.0.2"
   },
   "browserslist": {
     "production": [

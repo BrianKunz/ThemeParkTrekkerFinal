@@ -31,7 +31,6 @@ app.use(session({
     saveUninitialized: true,
     cookie: { secure: true },
 }));
-// app.use(sessionMiddleware);
 app.use("/users", user_controller_1.default);
 app.use("/posts", post_controller_1.default);
 app.use("/trips", trip_controller_1.default);

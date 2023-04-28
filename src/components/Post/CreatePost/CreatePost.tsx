@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+import * as React from "react";
 import { useCreatePost } from "./useCreatePost";
 
 export default function CreatePost() {
