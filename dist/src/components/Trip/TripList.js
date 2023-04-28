@@ -16,7 +16,7 @@ function TripList() {
         react_1.default.createElement("h1", null, "Trips"),
         react_1.default.createElement(CreateTrip_1.default, null),
         trips.length > 0 ? (trips.map((trip) => {
-            return react_1.default.createElement(Trip_1.Trip, { key: trip.id, trip: trip, user: user !== null && user !== void 0 ? user : undefined }); // <-- pass the user prop
+            return react_1.default.createElement(Trip_1.Trip, { key: trip.id, trip: trip, user: user ?? undefined }); // <-- pass the user prop
         })) : (react_1.default.createElement("p", null, "No trips planned yet!"))));
 }
 exports.default = TripList;

@@ -1,14 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AddForeignKeyToPost1622481599567 = void 0;
-const tslib_1 = require("tslib");
 class AddForeignKeyToPost1622481599567 {
     constructor() {
         this.name = "AddForeignKeyToPost1622481599567";
     }
-    up(queryRunner) {
-        return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            yield queryRunner.query(`
+    async up(queryRunner) {
+        await queryRunner.query(`
             ALTER TABLE "post"
             ADD CONSTRAINT "FK_e0e2d2b3f7d3f718977ac9f9c1d"
             FOREIGN KEY ("userId")
@@ -16,15 +14,12 @@ class AddForeignKeyToPost1622481599567 {
             ON DELETE CASCADE
             ON UPDATE CASCADE;
         `);
-        });
     }
-    down(queryRunner) {
-        return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            yield queryRunner.query(`
+    async down(queryRunner) {
+        await queryRunner.query(`
             ALTER TABLE "post"
             DROP CONSTRAINT "FK_e0e2d2b3f7d3f718977ac9f9c1d";
         `);
-        });
     }
 }
 exports.AddForeignKeyToPost1622481599567 = AddForeignKeyToPost1622481599567;

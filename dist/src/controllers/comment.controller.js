@@ -6,7 +6,7 @@ const database_1 = tslib_1.__importDefault(require("../../database"));
 const jsonwebtoken_1 = tslib_1.__importDefault(require("jsonwebtoken"));
 const commentController = express_1.default.Router();
 // Authorization middleware
-const authorize = (req, res, next) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+const authorize = async (req, res, next) => {
     const { authorization } = req.headers;
     if (!authorization || !authorization.startsWith("Bearer ")) {
         return res.status(401).json({ message: "Unauthorized" });
@@ -19,7 +19,7 @@ const authorize = (req, res, next) => tslib_1.__awaiter(void 0, void 0, void 0, 
         if (typeof decodedToken === "object" && decodedToken.userId) {
             const userId = decodedToken.userId;
             // Query the users table to check if the user exists
-            const { rows } = yield database_1.default.query("SELECT * FROM users WHERE id = $1", [userId]);
+            const { rows } = await database_1.default.query("SELECT * FROM users WHERE id = $1", [userId]);
             const user = rows[0];
             if (!user) {
                 return res.status(401).json({ message: "Unauthorized" });
@@ -37,38 +37,37 @@ const authorize = (req, res, next) => tslib_1.__awaiter(void 0, void 0, void 0, 
         res.status(500).json({ message: "Internal Server Error" });
     }
     return res.status(500).json(new Error("Internal Server Error"));
-});
+};
 // Show comments for a post
-commentController.get("/:postId", authorize, (req, res) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+commentController.get("/:postId", authorize, async (req, res) => {
     const { postId } = req.params;
     try {
-        const { rows } = yield database_1.default.query("SELECT * FROM comments WHERE post_id = $1", [postId]);
+        const { rows } = await database_1.default.query("SELECT * FROM comments WHERE post_id = $1", [postId]);
         res.json(rows);
     }
     catch (error) {
         console.error(error);
         res.status(500).json({ message: "Internal Server Error" });
     }
-}));
+});
 // Create a comment on a post
-commentController.post("/:postId", authorize, (req, res) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-    var _a;
+commentController.post("/:postId", authorize, async (req, res) => {
     const { body } = req.body;
     const { postId } = req.params;
-    const userId = (_a = req.user) === null || _a === void 0 ? void 0 : _a.id;
+    const userId = req.user?.id;
     if (!userId) {
         return res.status(401).json({ message: "Unauthorized" });
     }
     try {
         // Check if the post exists
-        const post = yield database_1.default.query("SELECT * FROM posts WHERE id = $1", [
+        const post = await database_1.default.query("SELECT * FROM posts WHERE id = $1", [
             postId,
         ]);
         if (post.rowCount === 0) {
             return res.status(404).json({ message: "Post not found" });
         }
         // Create the comment
-        const result = yield database_1.default.query("INSERT INTO comments (body, post_id, user_id) VALUES ($1, $2, $3) RETURNING *", [body, postId, userId]);
+        const result = await database_1.default.query("INSERT INTO comments (body, post_id, user_id) VALUES ($1, $2, $3) RETURNING *", [body, postId, userId]);
         res.json(result.rows[0]);
     }
     catch (error) {
@@ -76,17 +75,16 @@ commentController.post("/:postId", authorize, (req, res) => tslib_1.__awaiter(vo
         res.status(500).json({ message: "Internal Server Error" });
     }
     return res.status(500).json(new Error("Internal Server Error"));
-}));
+});
 // Delete a comment
-commentController.delete("/:commentId", authorize, (req, res) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-    var _b;
+commentController.delete("/:commentId", authorize, async (req, res) => {
     const { commentId } = req.params;
-    const userId = (_b = req.user) === null || _b === void 0 ? void 0 : _b.id;
+    const userId = req.user?.id;
     if (!userId) {
         return res.status(401).json({ message: "Unauthorized" });
     }
     try {
-        const result = yield database_1.default.query("DELETE FROM comments WHERE id = $1 AND user_id = $2 RETURNING *", [commentId, userId]);
+        const result = await database_1.default.query("DELETE FROM comments WHERE id = $1 AND user_id = $2 RETURNING *", [commentId, userId]);
         if (result.rowCount === 0) {
             return res.status(404).json({ message: "Comment not found" });
         }
@@ -97,6 +95,6 @@ commentController.delete("/:commentId", authorize, (req, res) => tslib_1.__await
         res.status(500).json({ message: "Internal Server Error" });
     }
     return res.status(500).json(new Error("Internal Server Error"));
-}));
+});
 exports.default = commentController;
 //# sourceMappingURL=comment.controller.js.map

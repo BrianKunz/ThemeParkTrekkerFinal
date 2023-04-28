@@ -7,14 +7,14 @@ const useTripStore_1 = require("../../stores/useTripStore");
 const Trip = ({ trip: { id, date, title, start_date, end_date, flight }, user, }) => {
     const { updateTrip, deleteTrip } = (0, useTripStore_1.useTripStore)();
     const [loading, setLoading] = (0, react_1.useState)(false);
-    const handleChange = ({ target: { name, value }, }) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+    const handleChange = async ({ target: { name, value }, }) => {
         console.log({ value });
         if (loading) {
             return;
         }
         setLoading(true);
         try {
-            yield updateTrip({
+            await updateTrip({
                 id,
                 user,
                 date,
@@ -31,14 +31,14 @@ const Trip = ({ trip: { id, date, title, start_date, end_date, flight }, user, }
         finally {
             setLoading(false);
         }
-    });
+    };
     const handleDelete = () => {
         if (!id) {
             return;
         }
         deleteTrip(id);
     };
-    const handleSubmit = (event) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+    const handleSubmit = async (event) => {
         event.preventDefault();
         console.log("Save button clicked");
         if (loading) {
@@ -46,7 +46,7 @@ const Trip = ({ trip: { id, date, title, start_date, end_date, flight }, user, }
         }
         setLoading(true);
         try {
-            yield updateTrip({
+            await updateTrip({
                 id,
                 user,
                 date,
@@ -62,7 +62,7 @@ const Trip = ({ trip: { id, date, title, start_date, end_date, flight }, user, }
         finally {
             setLoading(false);
         }
-    });
+    };
     return (react_1.default.createElement("div", null,
         react_1.default.createElement("h4", null, title),
         react_1.default.createElement("p", null,

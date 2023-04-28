@@ -10,11 +10,9 @@ const Post = () => {
     const { getOnePost, post } = (0, usePostStore_1.usePostStore)();
     const [loading, setLoading] = (0, react_1.useState)(true);
     (0, react_1.useEffect)(() => {
-        function fetchPost() {
-            return tslib_1.__awaiter(this, void 0, void 0, function* () {
-                yield getOnePost(id);
-                setLoading(false);
-            });
+        async function fetchPost() {
+            await getOnePost(id);
+            setLoading(false);
         }
         fetchPost();
     }, [getOnePost, id]);

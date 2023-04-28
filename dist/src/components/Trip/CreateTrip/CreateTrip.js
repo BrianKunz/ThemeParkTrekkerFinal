@@ -12,12 +12,12 @@ function CreateTrip() {
         react_1.default.createElement("label", { htmlFor: "start_date" }, "Start Date"),
         react_1.default.createElement(react_day_picker_1.DayPicker, { selected: formInputs.start_date, onDayClick: (date) => {
                 if (date !== null) {
-                    setFormInputs(Object.assign(Object.assign({}, formInputs), { start_date: date }));
+                    setFormInputs({ ...formInputs, start_date: date });
                 }
             }, required: true }),
         react_1.default.createElement(react_day_picker_1.DayPicker, { selected: formInputs.end_date, onDayClick: (date) => {
                 if (date !== null) {
-                    setFormInputs(Object.assign(Object.assign({}, formInputs), { end_date: date }));
+                    setFormInputs({ ...formInputs, end_date: date });
                 }
             }, required: true }),
         react_1.default.createElement("label", { htmlFor: "flight" }, "Flight Info"),

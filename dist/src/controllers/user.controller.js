@@ -7,10 +7,10 @@ const jsonwebtoken_1 = tslib_1.__importDefault(require("jsonwebtoken"));
 const bcrypt_1 = tslib_1.__importDefault(require("bcrypt"));
 const userController = express_1.default.Router();
 // Get all users
-userController.get("/", (req, res) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+userController.get("/", async (req, res) => {
     try {
-        const client = yield database_1.default.connect();
-        const result = yield client.query("SELECT * FROM users");
+        const client = await database_1.default.connect();
+        const result = await client.query("SELECT * FROM users");
         res.json(result.rows);
         client.release();
     }
@@ -18,14 +18,14 @@ userController.get("/", (req, res) => tslib_1.__awaiter(void 0, void 0, void 0, 
         console.error(error);
         res.status(500).json({ error: error, request: req.url });
     }
-}));
+});
 // Create user
-userController.post("/signup", (req, res) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+userController.post("/signup", async (req, res) => {
     const { username, email, password, admin } = req.body;
     try {
-        const hash = yield bcrypt_1.default.hash(password, 10);
-        const client = yield database_1.default.connect();
-        const result = yield client.query("INSERT INTO users (username, email, password, admin) VALUES ($1, $2, $3, $4) RETURNING *", [username, email, hash, admin]);
+        const hash = await bcrypt_1.default.hash(password, 10);
+        const client = await database_1.default.connect();
+        const result = await client.query("INSERT INTO users (username, email, password, admin) VALUES ($1, $2, $3, $4) RETURNING *", [username, email, hash, admin]);
         const user = result.rows[0];
         client.release();
         res.json(user);
@@ -34,20 +34,20 @@ userController.post("/signup", (req, res) => tslib_1.__awaiter(void 0, void 0, v
         console.error(error);
         res.status(500).json(error);
     }
-}));
+});
 // Login user
-userController.post("/login", (req, res) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+userController.post("/login", async (req, res) => {
     const { username, password } = req.body;
     try {
-        const client = yield database_1.default.connect();
-        const result = yield client.query("SELECT * FROM users WHERE username = $1", [username]);
+        const client = await database_1.default.connect();
+        const result = await client.query("SELECT * FROM users WHERE username = $1", [username]);
         const user = result.rows[0];
         client.release();
         if (!user) {
             res.status(401).json("Invalid username or password");
             return;
         }
-        const isPasswordValid = yield bcrypt_1.default.compare(password, user.password);
+        const isPasswordValid = await bcrypt_1.default.compare(password, user.password);
         if (!isPasswordValid) {
             res.status(401).json("Invalid username or password");
             return;
@@ -63,7 +63,7 @@ userController.post("/login", (req, res) => tslib_1.__awaiter(void 0, void 0, vo
         const token = jsonwebtoken_1.default.sign({ userId: user.id }, secret);
         const sessionID = req.sessionID;
         if (sessionID) {
-            res.json({ user: Object.assign(Object.assign({}, user), { isAdmin }), token, session_id: sessionID });
+            res.json({ user: { ...user, isAdmin }, token, session_id: sessionID });
         }
         else {
             res.status(500).json("sessionID is not defined");
@@ -73,6 +73,6 @@ userController.post("/login", (req, res) => tslib_1.__awaiter(void 0, void 0, vo
         console.error(error);
         res.status(500).json(error);
     }
-}));
+});
 exports.default = userController;
 //# sourceMappingURL=user.controller.js.map

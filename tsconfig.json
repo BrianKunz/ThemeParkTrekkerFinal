@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es6",
+    "target": "ES2020",
     "module": "commonjs",
     "moduleResolution": "node",
     "declaration": false,
@@ -20,12 +20,12 @@
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
     "sourceMap": true,
-    "typeRoots": ["./node_modules/@types", "@types"],
+    "typeRoots": ["./node_modules/@types"],
     "outDir": "dist",
     "types": ["node", "express", "express-session"],
-    "lib": ["ES6", "DOM"],
+    "lib": ["ES2020", "DOM"],
     "jsx": "react"
   },
-  "include": ["src/**/*", "@types"],
+  "include": ["src/**/*"],
   "exclude": ["node_modules", "**/*.spec.ts"]
 }

@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.useCreatePost = void 0;
-const tslib_1 = require("tslib");
 const react_1 = require("react");
 const usePostStore_1 = require("../../../stores/usePostStore");
 const uuid_1 = require("uuid");
@@ -18,16 +17,19 @@ function useCreatePost() {
     const { createNewPost } = (0, usePostStore_1.usePostStore)();
     const { currentUser } = (0, useUserStore_1.useUserStore)();
     const handlePostFormChange = ({ target: { name, value }, }) => {
-        setPostFormInputs((prevState) => (Object.assign(Object.assign({}, prevState), { [name]: value })));
+        setPostFormInputs((prevState) => ({
+            ...prevState,
+            [name]: value,
+        }));
     };
-    const handlePostSubmit = () => tslib_1.__awaiter(this, void 0, void 0, function* () {
+    const handlePostSubmit = async () => {
         if (loadingPosts) {
             return;
         }
         try {
             setLoadingPosts(true);
             const postId = (0, uuid_1.v4)();
-            yield createNewPost({
+            await createNewPost({
                 id: postId,
                 created: postFormInputs.created,
                 title: postFormInputs.title,
@@ -50,7 +52,7 @@ function useCreatePost() {
         finally {
             setLoadingPosts(false);
         }
-    });
+    };
     return {
         handlePostSubmit,
         handlePostFormChange,

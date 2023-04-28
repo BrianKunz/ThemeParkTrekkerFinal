@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.useLoginUser = void 0;
-const tslib_1 = require("tslib");
 const react_1 = require("react");
 const useUserStore_1 = require("../../../stores/useUserStore");
 function useLoginUser() {
@@ -12,16 +11,19 @@ function useLoginUser() {
     const [loadingLogin, setLoadingLogin] = (0, react_1.useState)(false);
     const { login } = (0, useUserStore_1.useUserStore)();
     const handleLoginFormChange = ({ target: { name, value }, }) => {
-        setLoginFormInputs((prevState) => (Object.assign(Object.assign({}, prevState), { [name]: value })));
+        setLoginFormInputs((prevState) => ({
+            ...prevState,
+            [name]: value,
+        }));
     };
-    const handleLoginSubmit = () => tslib_1.__awaiter(this, void 0, void 0, function* () {
+    const handleLoginSubmit = async () => {
         if (loadingLogin) {
             return;
         }
         try {
             setLoadingLogin(true);
             console.log("Form inputs: ", loginFormInputs);
-            yield login({
+            await login({
                 username: loginFormInputs.username,
                 password: loginFormInputs.password,
             });
@@ -37,7 +39,7 @@ function useLoginUser() {
         finally {
             setLoadingLogin(false);
         }
-    });
+    };
     return {
         handleLoginSubmit,
         handleLoginFormChange,

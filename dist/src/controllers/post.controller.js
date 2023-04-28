@@ -6,9 +6,9 @@ const database_1 = tslib_1.__importDefault(require("../../database"));
 const jsonwebtoken_1 = tslib_1.__importDefault(require("jsonwebtoken"));
 const postController = express_1.default.Router();
 // Index
-postController.get("/", (req, res) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+postController.get("/", async (req, res) => {
     try {
-        const { rows } = yield database_1.default.query("SELECT * FROM posts");
+        const { rows } = await database_1.default.query("SELECT * FROM posts");
         res.json(rows);
     }
     catch (error) {
@@ -17,12 +17,12 @@ postController.get("/", (req, res) => tslib_1.__awaiter(void 0, void 0, void 0, 
             .status(500)
             .json({ message: "Internal Server Error", request: req.url });
     }
-}));
+});
 // Show
-postController.get("/:id", (req, res) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+postController.get("/:id", async (req, res) => {
     const { id } = req.params;
     try {
-        const { rows } = yield database_1.default.query("SELECT * FROM posts WHERE id = $1", [id]);
+        const { rows } = await database_1.default.query("SELECT * FROM posts WHERE id = $1", [id]);
         const post = rows[0];
         if (!post) {
             return res.status(404).json({ message: "Not Found" });
@@ -34,12 +34,11 @@ postController.get("/:id", (req, res) => tslib_1.__awaiter(void 0, void 0, void 
         res.status(500).json({ message: "Internal Server Error" });
     }
     return res.status(500).json({ message: "Unknown Error" });
-}));
+});
 // Create
-postController.post("/", (req, res) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-    var _a;
+postController.post("/", async (req, res) => {
     const { title, image, description } = req.body;
-    const token = (_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(" ")[1];
+    const token = req.headers.authorization?.split(" ")[1];
     if (!token) {
         throw new Error("Token is missing");
     }
@@ -51,7 +50,7 @@ postController.post("/", (req, res) => tslib_1.__awaiter(void 0, void 0, void 0,
         if (userId !== process.env.ADMIN_USER_ID) {
             throw new Error("Unauthorized");
         }
-        const { rows: postRows } = yield database_1.default.query("INSERT INTO posts (title, image, description, user_id) VALUES ($1, $2, $3, $4) RETURNING *", [title, image, description, userId]);
+        const { rows: postRows } = await database_1.default.query("INSERT INTO posts (title, image, description, user_id) VALUES ($1, $2, $3, $4) RETURNING *", [title, image, description, userId]);
         const post = postRows[0];
         res.json(post);
     }
@@ -59,13 +58,12 @@ postController.post("/", (req, res) => tslib_1.__awaiter(void 0, void 0, void 0,
         console.error(error);
         res.status(401).json({ message: "Unauthorized" });
     }
-}));
+});
 // Update
-postController.put("/:id", (req, res) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-    var _b;
+postController.put("/:id", async (req, res) => {
     const { title, image, description } = req.body;
     const { id } = req.params;
-    const token = (_b = req.headers.authorization) === null || _b === void 0 ? void 0 : _b.split(" ")[1];
+    const token = req.headers.authorization?.split(" ")[1];
     if (!token) {
         throw new Error("Token is missing");
     }
@@ -84,12 +82,12 @@ postController.put("/:id", (req, res) => tslib_1.__awaiter(void 0, void 0, void 
         console.log("userId === ADMIN_USER_ID:", userId === process.env.ADMIN_USER_ID);
         console.log("userId:", typeof userId, userId);
         console.log("ADMIN_USER_ID:", typeof process.env.ADMIN_USER_ID, process.env.ADMIN_USER_ID);
-        const { rows: postRows } = yield database_1.default.query("SELECT * FROM posts WHERE id = $1", [id]);
+        const { rows: postRows } = await database_1.default.query("SELECT * FROM posts WHERE id = $1", [id]);
         const post = postRows[0];
         if (!post) {
             return res.status(404).json({ message: "Not Found" });
         }
-        const result = yield database_1.default.query("UPDATE posts SET title = $1, image = $2, description = $3 WHERE id = $4 AND user_id = $5 RETURNING *", [title, image, description, id, userId]);
+        const result = await database_1.default.query("UPDATE posts SET title = $1, image = $2, description = $3 WHERE id = $4 AND user_id = $5 RETURNING *", [title, image, description, id, userId]);
         res.json(result.rows[0]);
     }
     catch (error) {
@@ -97,12 +95,11 @@ postController.put("/:id", (req, res) => tslib_1.__awaiter(void 0, void 0, void 
         res.status(401).json({ message: "Unauthorized" });
     }
     return res.status(500).json(new Error("Internal Server Error"));
-}));
+});
 // Delete
-postController.delete("/:id", (req, res) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-    var _c;
+postController.delete("/:id", async (req, res) => {
     const { id } = req.params;
-    const token = (_c = req.headers.authorization) === null || _c === void 0 ? void 0 : _c.split(" ")[1];
+    const token = req.headers.authorization?.split(" ")[1];
     if (!token) {
         throw new Error("Token is missing");
     }
@@ -121,12 +118,12 @@ postController.delete("/:id", (req, res) => tslib_1.__awaiter(void 0, void 0, vo
         console.log("userId === ADMIN_USER_ID:", userId === process.env.ADMIN_USER_ID);
         console.log("userId:", typeof userId, userId);
         console.log("ADMIN_USER_ID:", typeof process.env.ADMIN_USER_ID, process.env.ADMIN_USER_ID);
-        const { rows } = yield database_1.default.query("SELECT * FROM posts WHERE id = $1", [id]);
+        const { rows } = await database_1.default.query("SELECT * FROM posts WHERE id = $1", [id]);
         const post = rows[0];
         if (!post) {
             return res.status(404).json({ message: "Not Found" });
         }
-        yield database_1.default.query("DELETE FROM posts WHERE id = $1", [id]);
+        await database_1.default.query("DELETE FROM posts WHERE id = $1", [id]);
         res.json({ message: "Post deleted successfully" });
     }
     catch (error) {
@@ -134,6 +131,6 @@ postController.delete("/:id", (req, res) => tslib_1.__awaiter(void 0, void 0, vo
         res.status(500).json(error);
     }
     return res.status(500).json(new Error("Internal Server Error"));
-}));
+});
 exports.default = postController;
 //# sourceMappingURL=post.controller.js.map

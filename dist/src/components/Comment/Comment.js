@@ -8,14 +8,14 @@ const CreateComment_1 = tslib_1.__importDefault(require("./CreateComment/CreateC
 const Comment = ({ comment: { id, time, body }, post, currentUser, }) => {
     const { updateComment, deleteComment } = (0, useCommentStore_1.useCommentStore)();
     const [loading, setLoading] = (0, react_1.useState)(false);
-    const handleChange = ({ target: { value }, }) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+    const handleChange = async ({ target: { value }, }) => {
         console.log({ value });
         if (loading || !post) {
             return;
         }
         setLoading(true);
         try {
-            yield updateComment({
+            await updateComment({
                 id,
                 time,
                 body: value,
@@ -29,7 +29,7 @@ const Comment = ({ comment: { id, time, body }, post, currentUser, }) => {
         finally {
             setLoading(false);
         }
-    });
+    };
     const handleCommentDelete = () => {
         if (!id) {
             return;
