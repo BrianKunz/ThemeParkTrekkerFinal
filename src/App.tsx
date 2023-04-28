@@ -7,7 +7,9 @@ import LoginUser from "./components/User/LoginUser/LoginUser";
 import Post from "./components/Post/Post";
 import HomePage from "./components/Home";
 
-const App: React.FC = () => {
+interface Props {}
+
+const App: React.FC<Props> = () => {
   return (
     <main className="App">
       <Route path="/" element={<HomePage />} />

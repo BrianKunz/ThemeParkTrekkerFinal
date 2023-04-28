@@ -2,7 +2,6 @@ import express, { Request, Response } from "express";
 import pool from "../../database";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-import { Session } from "express-session";
 
 const userController = express.Router();
 
@@ -67,20 +66,21 @@ userController.post("/login", async (req, res) => {
     // Set isAdmin property
     const isAdmin = user.admin === true;
 
-    const session = req.session as Session;
-    session.userId = user.id;
+    const session = (req as any).session;
+    if (session) {
+      session.userId = user.id;
+    }
 
     // Generate JWT token
     const secret = process.env.JWT_SECRET || "default-secret";
     const token = jwt.sign({ userId: user.id }, secret);
-    // const userId = (req.session as Session).userId;
 
-    console.log("token: ", token);
-    console.log("session id: ", req.sessionID);
-    console.log("login session data: ", req.session);
-    console.log("req session login: ", session.userId);
-
-    res.json({ user: { ...user, isAdmin }, token, session_id: req.sessionID });
+    const sessionID = (req as any).sessionID;
+    if (sessionID) {
+      res.json({ user: { ...user, isAdmin }, token, session_id: sessionID });
+    } else {
+      res.status(500).json("sessionID is not defined");
+    }
   } catch (error) {
     console.error(error);
     res.status(500).json(error);

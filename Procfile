@@ -1,1 +1,1 @@
-web: node dist/tsc/src/main.js
+web: npm start
