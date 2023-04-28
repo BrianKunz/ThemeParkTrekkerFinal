@@ -22,13 +22,8 @@ app.get("/favicon.ico", (_, res) => {
   res.status(204).end();
 });
 
-app.use(
-  "/static",
-  express.static(path.join(__dirname, "..", "..", "build", "static"))
-);
-
 app.get("*", (_, res) => {
-  res.sendFile(path.join(__dirname, "..", "..", "build", "index.html"));
+  res.sendFile(path.join(__dirname, "..", "dist", "src", "index.html"));
 });
 
 const corsOptions = {
