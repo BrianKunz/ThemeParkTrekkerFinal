@@ -35,7 +35,7 @@ export const Comment: React.FC<Props> = ({
         {
           id,
           time,
-          body,
+          body: value,
           post: post,
           user: currentUser,
         },
@@ -59,7 +59,10 @@ export const Comment: React.FC<Props> = ({
     <div>
       <CreateComment post={post} currentUser={currentUser} />
       {/* <p>{time}</p> */}
-      <h4>{body}</h4>
+      <input type="text" value={body} onChange={handleChange} />
+      <button disabled={loading} onClick={handleCommentDelete}>
+        Delete
+      </button>
     </div>
   );
 };

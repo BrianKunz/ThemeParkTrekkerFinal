@@ -25,9 +25,8 @@ export class Post {
   @Column()
   created: Date;
 
-  @ManyToOne(() => User, { eager: true })
-  user: User | null; // make user nullable
-
+  @ManyToOne(() => User, { nullable: false, onDelete: "CASCADE" })
+  user?: User | null;
   constructor(
     title: string,
     image: string | undefined,

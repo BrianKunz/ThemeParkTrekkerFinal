@@ -7,7 +7,9 @@ import tripController from "./controllers/trip.controller";
 import commentController from "./controllers/comment.controller";
 import morgan from "morgan";
 import cors from "cors";
-// import sessionMiddleware from "./services/sessionMiddleware";
+const session = require("express-session");
+// import session from "express-session";
+const secret = process.env.SESSION_SECRET || "default-secret";
 
 const PORT = 3001;
 
@@ -21,6 +23,15 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
+
+app.use(
+  session({
+    secret: secret,
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: true },
+  })
+);
 
 // app.use(sessionMiddleware);
 

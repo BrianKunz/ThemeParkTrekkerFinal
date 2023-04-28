@@ -18,7 +18,7 @@ export default function TripList() {
       <CreateTrip />
       {trips.length > 0 ? (
         trips.map((trip) => {
-          return <Trip key={trip.id} trip={trip} user={user} />; // <-- pass the user prop
+          return <Trip key={trip.id} trip={trip} user={user ?? undefined} />; // <-- pass the user prop
         })
       ) : (
         <p>No trips planned yet!</p>

@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { Route, Routes, Navigate } from "react-router-dom";
+import React from "react";
+import { Route, Navigate } from "react-router-dom";
 import TripList from "./components/Trip/TripList";
 import PostList from "./components/Post/PostList";
 import CreateUser from "./components/User/CreateUser/CreateUser";

@@ -1,7 +1,7 @@
 import axios from "axios";
 import { Post } from "../entities/Post.entity";
 
-const baseURL = "https://themeparktrekker.herokuapp.com/posts/";
+const baseURL = "/posts/";
 
 export const postService = {
   getAll: async (): Promise<Post[]> => {
