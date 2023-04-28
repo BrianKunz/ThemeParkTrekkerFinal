@@ -17,9 +17,9 @@ export function useCreateComment(post: Post, currentUser: User) {
   const [loadingComments, setLoadingComments] = useState(false);
   const { createNewComment } = useCommentStore();
 
-  const handleCommentFormChange: React.ChangeEventHandler<HTMLInputElement> = ({
-    target: { name, value },
-  }) => {
+  const handleCommentFormChange: React.ChangeEventHandler<
+    HTMLTextAreaElement
+  > = async ({ target: { name, value } }) => {
     setCommentFormInputs((prevState) => ({
       ...prevState,
       [name]: value,

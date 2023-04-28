@@ -36,10 +36,12 @@ const Comment = ({ comment: { id, time, body }, post, currentUser, }) => {
         }
         deleteComment(id, post);
     };
-    return (react_1.default.createElement("div", null,
+    return (react_1.default.createElement("div", { className: "my-4 p-4 border rounded-lg" },
         react_1.default.createElement(CreateComment_1.default, { post: post, currentUser: currentUser }),
-        react_1.default.createElement("input", { type: "text", value: body, onChange: handleChange }),
-        react_1.default.createElement("button", { disabled: loading, onClick: handleCommentDelete }, "Delete")));
+        react_1.default.createElement("div", { className: "my-2" }, time.toLocaleString()),
+        react_1.default.createElement("div", { className: "mb-2" },
+            react_1.default.createElement("input", { type: "text", value: body, onChange: handleChange, className: "border border-gray-300 rounded-lg p-2" })),
+        react_1.default.createElement("button", { disabled: loading, onClick: handleCommentDelete, className: "bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" }, "Delete")));
 };
 exports.Comment = Comment;
 //# sourceMappingURL=Comment.js.map

@@ -14,16 +14,20 @@ export default function TripList() {
   }, []);
 
   return (
-    <div>
+    <div className="bg-white mx-auto px-4 sm:px-6 lg:px-8">
       <NavBar />
-      <h1>Trips</h1>
+      <h1 className="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">
+        Trips
+      </h1>
       <CreateTrip />
       {trips.length > 0 ? (
-        trips.map((trip) => {
-          return <Trip key={trip.id} trip={trip} user={user ?? undefined} />; // <-- pass the user prop
-        })
+        <div className="mt-6 grid gap-6 lg:grid-cols-2 xl:grid-cols-3">
+          {trips.map((trip) => (
+            <Trip key={trip.id} trip={trip} user={user ?? undefined} />
+          ))}
+        </div>
       ) : (
-        <p>No trips planned yet!</p>
+        <p className="mt-6 text-xl text-gray-500">No trips planned yet!</p>
       )}
     </div>
   );

@@ -20,20 +20,22 @@ const Post: React.FC<Props> = () => {
   }, [getOnePost, id]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div className="text-center">Loading...</div>;
   }
 
   if (!post) {
-    return <div>No post found</div>;
+    return <div className="text-center">No post found</div>;
   }
 
   return (
     <div>
       <NavBar />
-      <h1>{post.title}</h1>
-      <img src={post.image} />
-      {/* <p>{post.created}</p> */}
-      <p>{post.description}</p>
+      <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+        <h1 className="text-3xl font-bold mb-4">{post.title}</h1>
+        <img src={post.image} alt={post.title} className="max-w-2xl mb-4" />
+        <p className="mb-4">{new Date(post.created).toLocaleString()}</p>
+        <p>{post.description}</p>
+      </div>
     </div>
   );
 };

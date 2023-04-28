@@ -52340,18 +52340,18 @@ const tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6
 const React = tslib_1.__importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 const react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/dist/index.js");
 function NavBar() {
-    return (React.createElement("nav", null,
-        React.createElement("ul", null,
+    return (React.createElement("nav", { className: "bg-purple-600 py-4" },
+        React.createElement("ul", { className: "flex justify-center" },
+            React.createElement("li", { className: "mr-6" },
+                React.createElement(react_router_dom_1.Link, { to: "/", className: "text-white hover:text-gray-300" }, "Home")),
+            React.createElement("li", { className: "mr-6" },
+                React.createElement(react_router_dom_1.Link, { to: "/posts", className: "text-white hover:text-gray-300" }, "Posts")),
+            React.createElement("li", { className: "mr-6" },
+                React.createElement(react_router_dom_1.Link, { to: "/trips", className: "text-white hover:text-gray-300" }, "Trips")),
+            React.createElement("li", { className: "mr-6" },
+                React.createElement(react_router_dom_1.Link, { to: "/signup", className: "text-white hover:text-gray-300" }, "Signup")),
             React.createElement("li", null,
-                React.createElement(react_router_dom_1.Link, { to: "/" }, "Home")),
-            React.createElement("li", null,
-                React.createElement(react_router_dom_1.Link, { to: "/posts" }, "Posts")),
-            React.createElement("li", null,
-                React.createElement(react_router_dom_1.Link, { to: "/trips" }, "Trips")),
-            React.createElement("li", null,
-                React.createElement(react_router_dom_1.Link, { to: "/signup" }, "Signup")),
-            React.createElement("li", null,
-                React.createElement(react_router_dom_1.Link, { to: "/login" }, "Login")))));
+                React.createElement(react_router_dom_1.Link, { to: "/login", className: "text-white hover:text-gray-300" }, "Login")))));
 }
 exports["default"] = NavBar;
 
@@ -52371,14 +52371,20 @@ const React = tslib_1.__importStar(__webpack_require__(/*! react */ "./node_modu
 const useCreatePost_1 = __webpack_require__(/*! ./useCreatePost */ "./src/components/Post/CreatePost/useCreatePost.ts");
 function CreatePost() {
     const { postFormInputs, handlePostFormChange, handlePostSubmit } = (0, useCreatePost_1.useCreatePost)();
-    return (React.createElement("form", { onSubmit: handlePostSubmit, method: "POST" },
-        React.createElement("label", { htmlFor: "title" }, "Title"),
-        React.createElement("input", { type: "text", name: "title", value: postFormInputs.title, onChange: handlePostFormChange, required: true }),
-        React.createElement("label", { htmlFor: "image" }, "Image Link"),
-        React.createElement("input", { type: "text", name: "image", value: postFormInputs.image, onChange: handlePostFormChange }),
-        React.createElement("label", { htmlFor: "description" }, "Description"),
-        React.createElement("input", { type: "text", name: "description", value: postFormInputs.description, onChange: handlePostFormChange, required: true }),
-        React.createElement("button", { type: "submit" }, "Submit")));
+    return (React.createElement("div", { className: "bg-white rounded-md shadow-md p-4 mx-auto my-4 w-full lg:w-3/4 xl:w-1/2" },
+        React.createElement("h2", { className: "text-xl font-bold mb-4" }, "Create Post"),
+        React.createElement("form", { onSubmit: handlePostSubmit, method: "POST" },
+            React.createElement("div", { className: "mb-4" },
+                React.createElement("label", { className: "block text-gray-700 font-bold mb-2", htmlFor: "title" }, "Title"),
+                React.createElement("input", { className: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline", type: "text", name: "title", value: postFormInputs.title, onChange: handlePostFormChange, required: true })),
+            React.createElement("div", { className: "mb-4" },
+                React.createElement("label", { className: "block text-gray-700 font-bold mb-2", htmlFor: "image" }, "Image Link"),
+                React.createElement("input", { className: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline", type: "text", name: "image", value: postFormInputs.image, onChange: handlePostFormChange })),
+            React.createElement("div", { className: "mb-6" },
+                React.createElement("label", { className: "block text-gray-700 font-bold mb-2", htmlFor: "description" }, "Description"),
+                React.createElement("input", { className: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline", type: "text", name: "description", value: postFormInputs.description, onChange: handlePostFormChange, required: true })),
+            React.createElement("div", { className: "flex justify-end" },
+                React.createElement("button", { className: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline", type: "submit" }, "Submit")))));
 }
 exports["default"] = CreatePost;
 
@@ -52484,16 +52490,18 @@ const Post = () => {
         fetchPost();
     }, [getOnePost, id]);
     if (loading) {
-        return react_1.default.createElement("div", null, "Loading...");
+        return react_1.default.createElement("div", { className: "text-center" }, "Loading...");
     }
     if (!post) {
-        return react_1.default.createElement("div", null, "No post found");
+        return react_1.default.createElement("div", { className: "text-center" }, "No post found");
     }
     return (react_1.default.createElement("div", null,
         react_1.default.createElement(NavBar_1.default, null),
-        react_1.default.createElement("h1", null, post.title),
-        react_1.default.createElement("img", { src: post.image }),
-        react_1.default.createElement("p", null, post.description)));
+        react_1.default.createElement("div", { className: "max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8" },
+            react_1.default.createElement("h1", { className: "text-3xl font-bold mb-4" }, post.title),
+            react_1.default.createElement("img", { src: post.image, alt: post.title, className: "max-w-2xl mb-4" }),
+            react_1.default.createElement("p", { className: "mb-4" }, new Date(post.created).toLocaleString()),
+            react_1.default.createElement("p", null, post.description))));
 };
 exports["default"] = Post;
 
@@ -52514,19 +52522,26 @@ const react_1 = __webpack_require__(/*! react */ "./node_modules/react/index.js"
 const usePostStore_1 = __webpack_require__(/*! ../../stores/usePostStore */ "./src/stores/usePostStore.ts");
 const CreatePost_1 = tslib_1.__importDefault(__webpack_require__(/*! ./CreatePost/CreatePost */ "./src/components/Post/CreatePost/CreatePost.tsx"));
 const NavBar_1 = tslib_1.__importDefault(__webpack_require__(/*! ../NavBar/NavBar */ "./src/components/NavBar/NavBar.tsx"));
+const react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/dist/index.js");
 function PostList() {
     const { posts, getAllPosts } = (0, usePostStore_1.usePostStore)();
     (0, react_1.useEffect)(() => {
         getAllPosts();
     }, []);
-    return (React.createElement("div", null,
+    return (React.createElement("div", { className: "bg-gray-200 min-h-screen" },
         React.createElement(NavBar_1.default, null),
-        React.createElement("h1", null, "Post List"),
-        React.createElement(CreatePost_1.default, null),
-        posts &&
-            posts.map((post) => (React.createElement("div", { key: post.id },
-                React.createElement("h2", null, post.title),
-                React.createElement("p", null, post.description))))));
+        React.createElement("div", { className: "max-w-7xl mx-auto py-6 sm:px-6 lg:px-8" },
+            React.createElement("div", { className: "px-4 py-6 sm:px-0" },
+                React.createElement("h1", { className: "text-4xl font-bold text-gray-900 mb-8" }, "Post List"),
+                React.createElement(CreatePost_1.default, null),
+                posts &&
+                    posts.map((post) => (React.createElement("div", { key: post.id, className: "bg-white rounded-md shadow-md overflow-hidden mb-8" },
+                        React.createElement(react_router_dom_1.Link, { to: `/posts/${post.id}` },
+                            React.createElement("img", { src: post.image, alt: post.title, className: "w-full h-64 object-cover" })),
+                        React.createElement("div", { className: "px-4 py-4" },
+                            React.createElement(react_router_dom_1.Link, { to: `/posts/${post.id}` },
+                                React.createElement("h2", { className: "text-xl font-bold text-gray-900 mb-2" }, post.title)),
+                            React.createElement("p", { className: "text-gray-700" }, post.description)))))))));
 }
 exports["default"] = PostList;
 
@@ -52547,23 +52562,30 @@ const useCreateTrip_1 = __webpack_require__(/*! ./useCreateTrip */ "./src/compon
 const react_day_picker_1 = __webpack_require__(/*! react-day-picker */ "./node_modules/react-day-picker/dist/index.esm.js");
 function CreateTrip() {
     const { formInputs, handleFormChange, handleSubmit, setFormInputs } = (0, useCreateTrip_1.useCreateTrip)();
-    return (React.createElement("form", { onSubmit: handleSubmit, method: "POST" },
-        React.createElement("label", { htmlFor: "title" }, "Title"),
-        React.createElement("input", { type: "text", name: "title", value: formInputs.title, onChange: handleFormChange, required: true }),
-        React.createElement("label", { htmlFor: "start_date" }, "Start Date"),
-        React.createElement(react_day_picker_1.DayPicker, { selected: formInputs.start_date, onDayClick: (date) => {
-                if (date !== null) {
-                    setFormInputs(Object.assign(Object.assign({}, formInputs), { start_date: date }));
-                }
-            }, required: true }),
-        React.createElement(react_day_picker_1.DayPicker, { selected: formInputs.end_date, onDayClick: (date) => {
-                if (date !== null) {
-                    setFormInputs(Object.assign(Object.assign({}, formInputs), { end_date: date }));
-                }
-            }, required: true }),
-        React.createElement("label", { htmlFor: "flight" }, "Flight Info"),
-        React.createElement("input", { type: "text", name: "flight", value: formInputs.flight, onChange: handleFormChange }),
-        React.createElement("button", { type: "submit" }, "Submit")));
+    return (React.createElement("div", { className: "flex flex-col items-center justify-center h-full" },
+        React.createElement("h1", { className: "text-2xl font-bold text-center mb-8 text-purple-700" }, "Create a Trip"),
+        React.createElement("form", { onSubmit: handleSubmit, method: "POST", className: "w-full max-w-md" },
+            React.createElement("div", { className: "mb-4" },
+                React.createElement("label", { htmlFor: "title", className: "block text-gray-700 font-bold mb-2" }, "Title"),
+                React.createElement("input", { type: "text", name: "title", value: formInputs.title, onChange: handleFormChange, required: true, className: "appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" })),
+            React.createElement("div", { className: "mb-4" },
+                React.createElement("label", { htmlFor: "start_date", className: "block text-gray-700 font-bold mb-2" }, "Start Date"),
+                React.createElement(react_day_picker_1.DayPicker, { selected: formInputs.start_date, onDayClick: (date) => {
+                        if (date !== null) {
+                            setFormInputs(Object.assign(Object.assign({}, formInputs), { start_date: date }));
+                        }
+                    }, required: true })),
+            React.createElement("div", { className: "mb-4" },
+                React.createElement("label", { htmlFor: "end_date", className: "block text-gray-700 font-bold mb-2" }, "End Date"),
+                React.createElement(react_day_picker_1.DayPicker, { selected: formInputs.end_date, onDayClick: (date) => {
+                        if (date !== null) {
+                            setFormInputs(Object.assign(Object.assign({}, formInputs), { end_date: date }));
+                        }
+                    }, required: true })),
+            React.createElement("div", { className: "mb-4" },
+                React.createElement("label", { htmlFor: "flight", className: "block text-gray-700 font-bold mb-2" }, "Flight Info"),
+                React.createElement("input", { type: "text", name: "flight", value: formInputs.flight, onChange: handleFormChange, className: "appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" })),
+            React.createElement("button", { type: "submit", className: "bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" }, "Submit"))));
 }
 exports["default"] = CreateTrip;
 
@@ -52709,28 +52731,28 @@ const Trip = ({ trip: { id, date, title, start_date, end_date, flight }, user, }
             setLoading(false);
         }
     });
-    return (react_1.default.createElement("div", null,
-        react_1.default.createElement("h4", null, title),
-        react_1.default.createElement("p", null,
+    return (react_1.default.createElement("div", { className: "border border-gray-300 shadow-md rounded-md p-4 my-4 mx-auto w-full lg:w-3/4 xl:w-1/2" },
+        react_1.default.createElement("h4", { className: "text-xl font-bold mb-4" }, title),
+        react_1.default.createElement("p", { className: "text-sm mb-2" },
             "Start Date: ",
             new Date(start_date).toLocaleDateString()),
-        react_1.default.createElement("p", null,
+        react_1.default.createElement("p", { className: "text-sm mb-2" },
             "End Date: ",
             new Date(end_date).toLocaleDateString()),
-        react_1.default.createElement("p", null,
+        react_1.default.createElement("p", { className: "text-sm mb-4" },
             "Flight: ",
             flight),
-        react_1.default.createElement("button", { onClick: handleDelete }, "Delete"),
+        react_1.default.createElement("button", { className: "bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mb-4", onClick: handleDelete }, "Delete"),
         react_1.default.createElement("br", null),
-        react_1.default.createElement("input", { name: "title", type: "text", onChange: handleChange, value: title }),
+        react_1.default.createElement("input", { className: "border rounded py-2 px-3 mb-2", name: "title", type: "text", onChange: handleChange, value: title }),
         react_1.default.createElement("br", null),
-        react_1.default.createElement("input", { name: "start_date", type: "date", onChange: handleChange, value: start_date.toISOString().substr(0, 10) }),
+        react_1.default.createElement("input", { className: "border rounded py-2 px-3 mb-2", name: "start_date", type: "date", onChange: handleChange, value: start_date.toISOString().substr(0, 10) }),
         react_1.default.createElement("br", null),
-        react_1.default.createElement("input", { name: "end_date", type: "date", onChange: handleChange, value: end_date.toISOString().substr(0, 10) }),
+        react_1.default.createElement("input", { className: "border rounded py-2 px-3 mb-2", name: "end_date", type: "date", onChange: handleChange, value: end_date.toISOString().substr(0, 10) }),
         react_1.default.createElement("br", null),
-        react_1.default.createElement("input", { name: "flight", type: "text", onChange: handleChange, value: flight }),
+        react_1.default.createElement("input", { className: "border rounded py-2 px-3 mb-4", name: "flight", type: "text", onChange: handleChange, value: flight }),
         react_1.default.createElement("br", null),
-        react_1.default.createElement("button", { disabled: loading, onClick: handleSubmit }, "Save")));
+        react_1.default.createElement("button", { className: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:opacity-50 disabled:cursor-not-allowed", disabled: loading, onClick: handleSubmit }, loading ? "Saving..." : "Save")));
 };
 exports.Trip = Trip;
 
@@ -52757,13 +52779,11 @@ function TripList() {
     (0, react_1.useEffect)(() => {
         getAllTrips();
     }, []);
-    return (React.createElement("div", null,
+    return (React.createElement("div", { className: "bg-white mx-auto px-4 sm:px-6 lg:px-8" },
         React.createElement(NavBar_1.default, null),
-        React.createElement("h1", null, "Trips"),
+        React.createElement("h1", { className: "text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl" }, "Trips"),
         React.createElement(CreateTrip_1.default, null),
-        trips.length > 0 ? (trips.map((trip) => {
-            return React.createElement(Trip_1.Trip, { key: trip.id, trip: trip, user: user !== null && user !== void 0 ? user : undefined });
-        })) : (React.createElement("p", null, "No trips planned yet!"))));
+        trips.length > 0 ? (React.createElement("div", { className: "mt-6 grid gap-6 lg:grid-cols-2 xl:grid-cols-3" }, trips.map((trip) => (React.createElement(Trip_1.Trip, { key: trip.id, trip: trip, user: user !== null && user !== void 0 ? user : undefined }))))) : (React.createElement("p", { className: "mt-6 text-xl text-gray-500" }, "No trips planned yet!"))));
 }
 exports["default"] = TripList;
 
@@ -52784,16 +52804,22 @@ const useCreateUser_1 = __webpack_require__(/*! ./useCreateUser */ "./src/compon
 const NavBar_1 = tslib_1.__importDefault(__webpack_require__(/*! ../../NavBar/NavBar */ "./src/components/NavBar/NavBar.tsx"));
 function CreateUser() {
     const { formInputs, handleFormChange, handleSubmit } = (0, useCreateUser_1.useCreateUser)();
-    return (React.createElement("div", null,
+    return (React.createElement("div", { className: "bg-blue-200 min-h-screen" },
         React.createElement(NavBar_1.default, null),
-        React.createElement("form", { onSubmit: handleSubmit, method: "POST" },
-            React.createElement("label", { htmlFor: "username" }, "Username"),
-            React.createElement("input", { type: "username", name: "username", value: formInputs.username, onChange: handleFormChange, required: true }),
-            React.createElement("label", { htmlFor: "email" }, "Email"),
-            React.createElement("input", { type: "email", name: "email", value: formInputs.email, onChange: handleFormChange, required: true }),
-            React.createElement("label", { htmlFor: "password" }, "Password"),
-            React.createElement("input", { type: "password", name: "password", value: formInputs.password, onChange: handleFormChange, required: true }),
-            React.createElement("button", { type: "submit" }, "Sign Up"))));
+        React.createElement("div", { className: "mx-auto w-1/2 mt-8 p-4 bg-white rounded-lg shadow-lg" },
+            React.createElement("h2", { className: "text-3xl font-bold text-center mb-4" }, "Create Account"),
+            React.createElement("form", { onSubmit: handleSubmit, method: "POST" },
+                React.createElement("div", { className: "mb-4" },
+                    React.createElement("label", { className: "block text-gray-700 font-bold mb-2", htmlFor: "username" }, "Username"),
+                    React.createElement("input", { className: "appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline", id: "username", type: "username", name: "username", value: formInputs.username, onChange: handleFormChange, required: true })),
+                React.createElement("div", { className: "mb-4" },
+                    React.createElement("label", { className: "block text-gray-700 font-bold mb-2", htmlFor: "email" }, "Email"),
+                    React.createElement("input", { className: "appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline", id: "email", type: "email", name: "email", value: formInputs.email, onChange: handleFormChange, required: true })),
+                React.createElement("div", { className: "mb-6" },
+                    React.createElement("label", { className: "block text-gray-700 font-bold mb-2", htmlFor: "password" }, "Password"),
+                    React.createElement("input", { className: "appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline", id: "password", type: "password", name: "password", value: formInputs.password, onChange: handleFormChange, required: true })),
+                React.createElement("div", { className: "flex items-center justify-center" },
+                    React.createElement("button", { className: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline", type: "submit" }, "Sign Up"))))));
 }
 exports["default"] = CreateUser;
 
@@ -52880,17 +52906,18 @@ function LoginUser() {
         event.preventDefault();
         handleLoginSubmit();
     };
-    return (react_1.default.createElement("div", null,
+    return (react_1.default.createElement("div", { className: "bg-gray-100 min-h-screen" },
         react_1.default.createElement(NavBar_1.default, null),
-        react_1.default.createElement("form", { onSubmit: handleFormSubmit },
-            react_1.default.createElement("h2", null, "Login"),
-            react_1.default.createElement("div", null,
-                react_1.default.createElement("label", { htmlFor: "username" }, "Username"),
-                react_1.default.createElement("input", { type: "text", name: "username", id: "username", value: loginFormInputs.username, onChange: handleLoginFormChange })),
-            react_1.default.createElement("div", null,
-                react_1.default.createElement("label", { htmlFor: "password" }, "Password"),
-                react_1.default.createElement("input", { type: "password", name: "password", id: "password", value: loginFormInputs.password, onChange: handleLoginFormChange })),
-            react_1.default.createElement("button", { type: "submit", disabled: loadingLogin }, loadingLogin ? "Loading..." : "Log in"))));
+        react_1.default.createElement("div", { className: "mx-auto max-w-lg pt-20 pb-10 px-4" },
+            react_1.default.createElement("h2", { className: "text-3xl font-semibold mb-4" }, "Login"),
+            react_1.default.createElement("form", { onSubmit: handleFormSubmit, className: "space-y-4" },
+                react_1.default.createElement("div", null,
+                    react_1.default.createElement("label", { htmlFor: "username", className: "block text-gray-700 font-semibold mb-2" }, "Username"),
+                    react_1.default.createElement("input", { type: "text", name: "username", id: "username", value: loginFormInputs.username, onChange: handleLoginFormChange, className: "w-full rounded border-gray-300 focus:border-blue-500 focus:ring-blue-500" })),
+                react_1.default.createElement("div", null,
+                    react_1.default.createElement("label", { htmlFor: "password", className: "block text-gray-700 font-semibold mb-2" }, "Password"),
+                    react_1.default.createElement("input", { type: "password", name: "password", id: "password", value: loginFormInputs.password, onChange: handleLoginFormChange, className: "w-full rounded border-gray-300 focus:border-blue-500 focus:ring-blue-500" })),
+                react_1.default.createElement("button", { type: "submit", disabled: loadingLogin, className: "w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed" }, loadingLogin ? "Loading..." : "Log in")))));
 }
 exports["default"] = LoginUser;
 

@@ -17,16 +17,26 @@ export default function CreateComment({ post, currentUser }: Props) {
   } = useCreateComment(post, currentUser);
 
   return (
-    <form onSubmit={handleCommentSubmit} method="POST">
-      <label htmlFor="body">Comment</label>
-      <input
-        type="text"
+    <form
+      onSubmit={handleCommentSubmit}
+      method="POST"
+      className="my-4 mx-auto w-full lg:w-3/4 xl:w-1/2 bg-gray-200 rounded-md p-4"
+    >
+      <label htmlFor="body" className="block font-bold text-lg mb-2">
+        Comment
+      </label>
+      <textarea
+        className="border rounded py-2 px-3 mb-2 w-full"
         name="body"
         value={commentFormInputs.body}
         onChange={handleCommentFormChange}
         required
       />
-      <button type="submit" disabled={loadingComments}>
+      <button
+        type="submit"
+        disabled={loadingComments}
+        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+      >
         Submit
       </button>
     </form>

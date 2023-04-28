@@ -11,8 +11,8 @@ const CommentList = ({ post, currentUser }) => {
     (0, react_1.useEffect)(() => {
         getAllComments(post);
     }, [post]);
-    return (react_1.default.createElement("div", null,
-        react_1.default.createElement("h3", null, "Comments"),
+    return (react_1.default.createElement("div", { className: "bg-gray-100 rounded-lg p-4" },
+        react_1.default.createElement("h3", { className: "text-lg font-bold mb-2" }, "Comments"),
         react_1.default.createElement(CreateComment_1.default, { post: post, currentUser: currentUser }),
         comments.map((comment) => {
             return (react_1.default.createElement(Comment_1.Comment, { key: comment.id, comment: comment, post: post, currentUser: currentUser }));

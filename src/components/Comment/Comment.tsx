@@ -56,11 +56,22 @@ export const Comment: React.FC<Props> = ({
   };
 
   return (
-    <div>
+    <div className="my-4 p-4 border rounded-lg">
       <CreateComment post={post} currentUser={currentUser} />
-      {/* <p>{time}</p> */}
-      <input type="text" value={body} onChange={handleChange} />
-      <button disabled={loading} onClick={handleCommentDelete}>
+      <div className="my-2">{time.toLocaleString()}</div>
+      <div className="mb-2">
+        <input
+          type="text"
+          value={body}
+          onChange={handleChange}
+          className="border border-gray-300 rounded-lg p-2"
+        />
+      </div>
+      <button
+        disabled={loading}
+        onClick={handleCommentDelete}
+        className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+      >
         Delete
       </button>
     </div>

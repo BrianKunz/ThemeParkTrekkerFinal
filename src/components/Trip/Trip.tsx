@@ -76,16 +76,32 @@ export const Trip: React.FC<TripProps> = ({
   };
 
   return (
-    <div>
-      <h4>{title}</h4>
-      <p>Start Date: {new Date(start_date).toLocaleDateString()}</p>
-      <p>End Date: {new Date(end_date).toLocaleDateString()}</p>
-      <p>Flight: {flight}</p>
-      <button onClick={handleDelete}>Delete</button>
-      <br />
-      <input name="title" type="text" onChange={handleChange} value={title} />
+    <div className="border border-gray-300 shadow-md rounded-md p-4 my-4 mx-auto w-full lg:w-3/4 xl:w-1/2">
+      <h4 className="text-xl font-bold mb-4">{title}</h4>
+      <p className="text-sm mb-2">
+        Start Date: {new Date(start_date).toLocaleDateString()}
+      </p>
+      <p className="text-sm mb-2">
+        End Date: {new Date(end_date).toLocaleDateString()}
+      </p>
+      <p className="text-sm mb-4">Flight: {flight}</p>
+      <button
+        className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mb-4"
+        onClick={handleDelete}
+      >
+        Delete
+      </button>
       <br />
       <input
+        className="border rounded py-2 px-3 mb-2"
+        name="title"
+        type="text"
+        onChange={handleChange}
+        value={title}
+      />
+      <br />
+      <input
+        className="border rounded py-2 px-3 mb-2"
         name="start_date"
         type="date"
         onChange={handleChange}
@@ -93,16 +109,27 @@ export const Trip: React.FC<TripProps> = ({
       />
       <br />
       <input
+        className="border rounded py-2 px-3 mb-2"
         name="end_date"
         type="date"
         onChange={handleChange}
         value={end_date.toISOString().substr(0, 10)}
       />
       <br />
-      <input name="flight" type="text" onChange={handleChange} value={flight} />
+      <input
+        className="border rounded py-2 px-3 mb-4"
+        name="flight"
+        type="text"
+        onChange={handleChange}
+        value={flight}
+      />
       <br />
-      <button disabled={loading} onClick={handleSubmit}>
-        Save
+      <button
+        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:opacity-50 disabled:cursor-not-allowed"
+        disabled={loading}
+        onClick={handleSubmit}
+      >
+        {loading ? "Saving..." : "Save"}
       </button>
     </div>
   );

@@ -12,9 +12,9 @@ function useCreateComment(post, currentUser) {
     });
     const [loadingComments, setLoadingComments] = (0, react_1.useState)(false);
     const { createNewComment } = (0, useCommentStore_1.useCommentStore)();
-    const handleCommentFormChange = ({ target: { name, value }, }) => {
+    const handleCommentFormChange = ({ target: { name, value } }) => tslib_1.__awaiter(this, void 0, void 0, function* () {
         setCommentFormInputs((prevState) => (Object.assign(Object.assign({}, prevState), { [name]: value })));
-    };
+    });
     const handleCommentSubmit = () => tslib_1.__awaiter(this, void 0, void 0, function* () {
         if (loadingComments) {
             return;

@@ -17,8 +17,8 @@ export const CommentList: React.FC<Props> = ({ post, currentUser }) => {
   }, [post]);
 
   return (
-    <div>
-      <h3>Comments</h3>
+    <div className="bg-gray-100 rounded-lg p-4">
+      <h3 className="text-lg font-bold mb-2">Comments</h3>
       <CreateComment post={post} currentUser={currentUser} />
       {comments.map((comment) => {
         return (

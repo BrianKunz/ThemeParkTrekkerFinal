@@ -19,16 +19,18 @@ const Post = () => {
         fetchPost();
     }, [getOnePost, id]);
     if (loading) {
-        return react_1.default.createElement("div", null, "Loading...");
+        return react_1.default.createElement("div", { className: "text-center" }, "Loading...");
     }
     if (!post) {
-        return react_1.default.createElement("div", null, "No post found");
+        return react_1.default.createElement("div", { className: "text-center" }, "No post found");
     }
     return (react_1.default.createElement("div", null,
         react_1.default.createElement(NavBar_1.default, null),
-        react_1.default.createElement("h1", null, post.title),
-        react_1.default.createElement("img", { src: post.image }),
-        react_1.default.createElement("p", null, post.description)));
+        react_1.default.createElement("div", { className: "max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8" },
+            react_1.default.createElement("h1", { className: "text-3xl font-bold mb-4" }, post.title),
+            react_1.default.createElement("img", { src: post.image, alt: post.title, className: "max-w-2xl mb-4" }),
+            react_1.default.createElement("p", { className: "mb-4" }, new Date(post.created).toLocaleString()),
+            react_1.default.createElement("p", null, post.description))));
 };
 exports.default = Post;
 //# sourceMappingURL=Post.js.map
