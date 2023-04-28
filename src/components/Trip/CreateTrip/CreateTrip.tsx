@@ -1,7 +1,6 @@
 import React from "react";
 import { useCreateTrip } from "./useCreateTrip";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
+import { DayPicker } from "react-day-picker";
 
 export default function CreateTrip() {
   const { formInputs, handleFormChange, handleSubmit, setFormInputs } =
@@ -18,25 +17,25 @@ export default function CreateTrip() {
         required
       />
       <label htmlFor="start_date">Start Date</label>
-      <DatePicker
+      <DayPicker
         selected={formInputs.start_date}
-        onChange={(date) => {
+        onDayClick={(date) => {
           if (date !== null) {
             setFormInputs({ ...formInputs, start_date: date });
           }
         }}
         required
       />
-      <label htmlFor="end_date">End Date</label>
-      <DatePicker
+      <DayPicker
         selected={formInputs.end_date}
-        onChange={(date) => {
+        onDayClick={(date) => {
           if (date !== null) {
             setFormInputs({ ...formInputs, end_date: date });
           }
         }}
         required
       />
+
       <label htmlFor="flight">Flight Info</label>
       <input
         type="text"
