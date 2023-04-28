@@ -52312,16 +52312,16 @@ const tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6
 const React = tslib_1.__importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 const react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/dist/index.js");
 function HomePage() {
-    return (React.createElement("div", null,
-        React.createElement("h1", null, "Welcome to the Site!"),
-        React.createElement("p", null, "Please select an option below:"),
-        React.createElement("ul", null,
-            React.createElement("li", null,
-                React.createElement(react_router_dom_1.Link, { to: "/posts" }, "View Posts")),
-            React.createElement("li", null,
-                React.createElement(react_router_dom_1.Link, { to: "/login" }, "Login")),
-            React.createElement("li", null,
-                React.createElement(react_router_dom_1.Link, { to: "/signup" }, "Signup")))));
+    return (React.createElement("div", { className: "bg-blue-100 p-4" },
+        React.createElement("h1", { className: "text-3xl font-bold mb-4 text-center" }, "Welcome to the Theme Park Trekker!"),
+        React.createElement("p", { className: "text-lg mb-2 text-center" }, "Please select an option below:"),
+        React.createElement("ul", { className: "flex flex-col items-center" },
+            React.createElement("li", { className: "my-4" },
+                React.createElement(react_router_dom_1.Link, { to: "/posts", className: "bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded" }, "View Posts")),
+            React.createElement("li", { className: "my-4" },
+                React.createElement(react_router_dom_1.Link, { to: "/login", className: "bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded" }, "Login")),
+            React.createElement("li", { className: "my-4" },
+                React.createElement(react_router_dom_1.Link, { to: "/signup", className: "bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded" }, "Signup")))));
 }
 exports["default"] = HomePage;
 
