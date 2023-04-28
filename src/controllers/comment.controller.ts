@@ -1,92 +1,146 @@
-import express, { Request, Response } from "express";
-import { Session } from "express-session";
+import express, { Request, Response, NextFunction } from "express";
 import { Comment } from "../entities/Comment.entity";
 import { Post } from "../entities/Post.entity";
+import { User } from "../entities/User.entity";
 import pool from "../../database";
+import jwt from "jsonwebtoken";
 
 const commentController = express.Router();
 
-declare module "express-session" {
-  interface Session {
-    userId?: number;
-  }
+interface AuthRequest extends Request {
+  user?: User;
 }
 
-// Show comments for a post
-commentController.get("/:postId", async (req: Request, res: Response) => {
-  const { postId } = req.params;
+// Authorization middleware
+const authorize = async (
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  const { authorization } = req.headers;
+  if (!authorization || !authorization.startsWith("Bearer ")) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+
+  const token = authorization.split(" ")[1];
+  const secret = process.env.JWT_SECRET || "default-secret";
 
   try {
-    const { rows } = await pool.query<Comment>(
-      "SELECT * FROM comments WHERE post_id = $1",
-      [postId]
-    );
-    res.json(rows);
+    // Decode the token and extract the user ID
+    const decodedToken = jwt.verify(token, secret);
+    if (typeof decodedToken === "object" && decodedToken.userId) {
+      const userId = decodedToken.userId;
+
+      // Query the users table to check if the user exists
+      const { rows } = await pool.query<User>(
+        "SELECT * FROM users WHERE id = $1",
+        [userId]
+      );
+      const user = rows[0];
+      if (!user) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+
+      // Set the req.user property and call the next middleware function
+      req.user = user;
+      next();
+    } else {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
   }
-});
+  return;
+};
+
+// Show comments for a post
+commentController.get(
+  "/:postId",
+  authorize,
+  async (req: AuthRequest, res: Response) => {
+    const { postId } = req.params;
+
+    try {
+      const { rows } = await pool.query<Comment>(
+        "SELECT * FROM comments WHERE post_id = $1",
+        [postId]
+      );
+      res.json(rows);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
+);
 
 // Create a comment on a post
-commentController.post("/:postId", async (req: Request, res: Response) => {
-  const { content } = req.body;
-  const { postId } = req.params;
-  const userId = (req.session as Session).userId;
+commentController.post(
+  "/:postId",
+  authorize,
+  async (req: AuthRequest, res: Response) => {
+    const { body } = req.body;
+    const { postId } = req.params;
+    const userId = req.user?.id;
 
-  if (!userId) {
-    return res.status(401).json({ message: "Unauthorized" });
-  }
-
-  try {
-    // Check if the post exists
-    const post = await pool.query<Post>("SELECT * FROM posts WHERE id = $1", [
-      postId,
-    ]);
-
-    if (post.rowCount === 0) {
-      return res.status(404).json({ message: "Post not found" });
+    if (!userId) {
+      return res.status(401).json({ message: "Unauthorized" });
     }
 
-    // Create the comment
-    const result = await pool.query<Comment>(
-      "INSERT INTO comments (content, user_id, post_id) VALUES ($1, $2, $3) RETURNING *",
-      [content, userId, postId]
-    );
+    try {
+      // Check if the post exists
+      const post = await pool.query<Post>("SELECT * FROM posts WHERE id = $1", [
+        postId,
+      ]);
 
-    res.json(result.rows[0]);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Internal Server Error" });
+      if (post.rowCount === 0) {
+        return res.status(404).json({ message: "Post not found" });
+      }
+
+      // Create the comment
+      const result = await pool.query<Comment>(
+        "INSERT INTO comments (body, post_id, user_id) VALUES ($1, $2, $3) RETURNING *",
+        [body, postId, userId]
+      );
+
+      res.json(result.rows[0]);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+    return;
   }
-  return res.status(500).json({ message: "Unknown Error" });
-});
+);
 
 // Delete a comment
-commentController.delete("/:commentId", async (req: Request, res: Response) => {
-  const { commentId } = req.params;
-  const userId = (req.session as Session).userId;
+commentController.delete(
+  "/:commentId",
+  authorize,
+  async (req: AuthRequest, res: Response) => {
+    const { commentId } = req.params;
+    const userId = req.user?.id;
 
-  if (!userId) {
-    return res.status(401).json({ message: "Unauthorized" });
-  }
-
-  try {
-    const result = await pool.query<Comment>(
-      "DELETE FROM comments WHERE id = $1 AND user_id = $2 RETURNING *",
-      [commentId, userId]
-    );
-
-    if (result.rowCount === 0) {
-      return res.status(404).json({ message: "Comment not found" });
+    if (!userId) {
+      return res.status(401).json({ message: "Unauthorized" });
     }
 
-    res.status(204).send();
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Internal Server Error" });
+    try {
+      const result = await pool.query<Comment>(
+        "DELETE FROM comments WHERE id = $1 AND user_id = $2 RETURNING *",
+        [commentId, userId]
+      );
+
+      if (result.rowCount === 0) {
+        return res.status(404).json({ message: "Comment not found" });
+      }
+
+      res.status(204).send();
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+    return;
   }
-  return res.status(500).json({ message: "Unknown Error" });
-});
+);
 
 export default commentController;

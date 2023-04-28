@@ -1,23 +1,61 @@
-import express, { Request, Response } from "express";
-import { Session } from "express-session";
+import express, { Request, Response, NextFunction } from "express";
 import { Trip } from "../entities/Trip.entity";
 import { User } from "../entities/User.entity";
 import pool from "../../database";
+import jwt from "jsonwebtoken";
 
 const tripController = express.Router();
 
-declare module "express-session" {
-  interface Session {
-    userId?: number;
-  }
+interface AuthRequest extends Request {
+  user?: User;
 }
 
-// Index
-tripController.get("/", async (req: Request, res: Response) => {
-  const userId = (req.session as Session).userId;
-  if (!userId) {
+// Authorization middleware
+const authorize = async (
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  const { authorization } = req.headers;
+  if (!authorization || !authorization.startsWith("Bearer ")) {
     return res.status(401).json({ message: "Unauthorized" });
   }
+
+  const token = authorization.split(" ")[1];
+  const secret = process.env.JWT_SECRET || "default-secret";
+
+  try {
+    // Decode the token and extract the user ID
+    const decodedToken = jwt.verify(token, secret);
+    if (typeof decodedToken === "object" && decodedToken.userId) {
+      const userId = decodedToken.userId;
+
+      // Query the users table to check if the user exists
+      const { rows } = await pool.query<User>(
+        "SELECT * FROM users WHERE id = $1",
+        [userId]
+      );
+      const user = rows[0];
+      if (!user) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+
+      // Set the req.user property and call the next middleware function
+      req.user = user;
+      next();
+    } else {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+  return;
+};
+
+// Index
+tripController.get("/", authorize, async (req: AuthRequest, res: Response) => {
+  const userId = req.user?.id;
 
   try {
     const { rows } = await pool.query<Trip>(
@@ -29,39 +67,37 @@ tripController.get("/", async (req: Request, res: Response) => {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
   }
-
-  return res.status(500).json({ message: "Unknown Error" });
 });
 
 // Show
-tripController.get("/:id", async (req, res) => {
-  const { id } = req.params;
+tripController.get(
+  "/:id",
+  authorize,
+  async (req: AuthRequest, res: Response) => {
+    const { id } = req.params;
 
-  try {
-    const { rows } = await pool.query<Trip>(
-      "SELECT * FROM trips WHERE id = $1",
-      [id]
-    );
-    const trip = rows[0];
-    if (!trip) {
-      return res.status(404).json({ message: "Not Found" });
+    try {
+      const { rows } = await pool.query<Trip>(
+        "SELECT * FROM trips WHERE id = $1 AND user_id = $2",
+        [id, req.user?.id]
+      );
+      const trip = rows[0];
+      if (!trip) {
+        return res.status(404).json({ message: "Not Found" });
+      }
+      res.json(trip);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Internal Server Error" });
     }
-    res.json(trip);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Internal Server Error" });
+    return;
   }
-
-  return res.status(500).json({ message: "Unknown Error" });
-});
+);
 
 // Create
-tripController.post("/", async (req: Request, res: Response) => {
+tripController.post("/", authorize, async (req: AuthRequest, res: Response) => {
   const { title, date, start_date, end_date, flight } = req.body;
-  const userId = (req.session as Session).userId;
-  if (!userId) {
-    return res.status(401).json({ message: "Unauthorized" });
-  }
+  const userId = req.user?.id;
 
   try {
     const userRepository = pool.query<User>(
@@ -81,59 +117,65 @@ tripController.post("/", async (req: Request, res: Response) => {
     console.error(error);
     res.status(500).json(error);
   }
-
-  return res.status(500).json({ message: "Unknown Error" });
+  return;
 });
 
 // Update
-tripController.put("/:id", async (req: Request, res: Response) => {
-  const { title, date, start_date, end_date, flight } = req.body;
-  const { id } = req.params;
+tripController.put(
+  "/:id",
+  authorize,
+  async (req: AuthRequest, res: Response) => {
+    const { title, date, start_date, end_date, flight } = req.body;
+    const { id } = req.params;
 
-  try {
-    const { rows } = await pool.query<Trip>(
-      "SELECT * FROM trips WHERE id = $1",
-      [id]
-    );
-    const trip = rows[0];
-    if (!trip) {
-      return res.status(404).json({ message: "Not Found" });
+    try {
+      const { rows } = await pool.query<Trip>(
+        "SELECT * FROM trips WHERE id = $1 AND user_id = $2",
+        [id, req.user?.id]
+      );
+      const trip = rows[0];
+      if (!trip) {
+        return res.status(404).json({ message: "Not Found" });
+      }
+
+      const result = await pool.query<Trip>(
+        "UPDATE trips SET title = $1, date = $2, start_date = $3, end_date = $4, flight = $5 WHERE id = $6 RETURNING *",
+        [title, date, start_date, end_date, flight, id]
+      );
+      res.json(result.rows[0]);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json(error);
     }
-
-    const result = await pool.query<Trip>(
-      "UPDATE trips SET title = $1, date = $2, start_date = $3, end_date = $4, flight = $5 WHERE id = $6 RETURNING *",
-      [title, date, start_date, end_date, flight, id]
-    );
-    res.json(result.rows[0]);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json(error);
+    return;
   }
+);
 
-  return res.status(500).json({ message: "Unknown Error" });
-});
+// Delete
+tripController.delete(
+  "/:id",
+  authorize,
+  async (req: AuthRequest, res: Response) => {
+    const { id } = req.params;
 
-tripController.delete("/:id", async (req: Request, res: Response) => {
-  const { id } = req.params;
+    try {
+      const { rows } = await pool.query<Trip>(
+        "SELECT * FROM trips WHERE id = $1 AND user_id = $2",
+        [id, req.user?.id]
+      );
+      const trip = rows[0];
+      if (!trip) {
+        return res.status(404).json({ message: "Not Found" });
+      }
 
-  try {
-    const { rows } = await pool.query<Trip>(
-      "SELECT * FROM trips WHERE id = $1",
-      [id]
-    );
-    const trip = rows[0];
-    if (!trip) {
-      return res.status(404).json({ message: "Not Found" });
+      await pool.query("DELETE FROM trips WHERE id = $1", [id]);
+      res.sendStatus(204);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Internal Server Error" });
     }
-
-    await pool.query("DELETE FROM trips WHERE id = $1", [id]);
-    res.sendStatus(204);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Internal Server Error" });
+    return;
   }
-
-  return res.status(500).json({ message: "Unknown Error" });
-});
+);
 
 export default tripController;
