@@ -36,7 +36,7 @@ const authorize = (req, res, next) => tslib_1.__awaiter(void 0, void 0, void 0, 
         console.error(error);
         res.status(500).json({ message: "Internal Server Error" });
     }
-    return;
+    return res.status(500).json(new Error("Internal Server Error"));
 });
 // Show comments for a post
 commentController.get("/:postId", authorize, (req, res) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
@@ -75,7 +75,7 @@ commentController.post("/:postId", authorize, (req, res) => tslib_1.__awaiter(vo
         console.error(error);
         res.status(500).json({ message: "Internal Server Error" });
     }
-    return;
+    return res.status(500).json(new Error("Internal Server Error"));
 }));
 // Delete a comment
 commentController.delete("/:commentId", authorize, (req, res) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
@@ -96,7 +96,7 @@ commentController.delete("/:commentId", authorize, (req, res) => tslib_1.__await
         console.error(error);
         res.status(500).json({ message: "Internal Server Error" });
     }
-    return;
+    return res.status(500).json(new Error("Internal Server Error"));
 }));
 exports.default = commentController;
 //# sourceMappingURL=comment.controller.js.map

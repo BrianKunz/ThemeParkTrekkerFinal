@@ -25,7 +25,7 @@ tslib_1.__decorate([
 ], Comment.prototype, "post", void 0);
 tslib_1.__decorate([
     (0, typeorm_1.ManyToOne)(() => User_entity_1.User, (user) => user.trips),
-    tslib_1.__metadata("design:type", Object)
+    tslib_1.__metadata("design:type", User_entity_1.User)
 ], Comment.prototype, "user", void 0);
 Comment = tslib_1.__decorate([
     (0, typeorm_1.Entity)()

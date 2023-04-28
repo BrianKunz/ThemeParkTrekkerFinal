@@ -96,7 +96,7 @@ postController.put("/:id", (req, res) => tslib_1.__awaiter(void 0, void 0, void 
         console.error(error);
         res.status(401).json({ message: "Unauthorized" });
     }
-    return;
+    return res.status(500).json(new Error("Internal Server Error"));
 }));
 // Delete
 postController.delete("/:id", (req, res) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
@@ -133,7 +133,7 @@ postController.delete("/:id", (req, res) => tslib_1.__awaiter(void 0, void 0, vo
         console.error(error);
         res.status(500).json(error);
     }
-    return;
+    return res.status(500).json(new Error("Internal Server Error"));
 }));
 exports.default = postController;
 //# sourceMappingURL=post.controller.js.map

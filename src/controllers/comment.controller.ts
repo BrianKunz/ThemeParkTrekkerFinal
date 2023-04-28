@@ -51,7 +51,7 @@ const authorize = async (
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
   }
-  return;
+  return res.status(500).json(new Error("Internal Server Error"));
 };
 
 // Show comments for a post
@@ -108,7 +108,7 @@ commentController.post(
       console.error(error);
       res.status(500).json({ message: "Internal Server Error" });
     }
-    return;
+    return res.status(500).json(new Error("Internal Server Error"));
   }
 );
 
@@ -139,7 +139,7 @@ commentController.delete(
       console.error(error);
       res.status(500).json({ message: "Internal Server Error" });
     }
-    return;
+    return res.status(500).json(new Error("Internal Server Error"));
   }
 );
 

@@ -50,7 +50,7 @@ const authorize = async (
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
   }
-  return;
+  return res.status(401).json({ message: "Unauthorized" });
 };
 
 // Index
@@ -90,7 +90,7 @@ tripController.get(
       console.error(error);
       res.status(500).json({ message: "Internal Server Error" });
     }
-    return;
+    return res.status(500).json(new Error("Internal Server Error"));
   }
 );
 
@@ -117,7 +117,7 @@ tripController.post("/", authorize, async (req: AuthRequest, res: Response) => {
     console.error(error);
     res.status(500).json(error);
   }
-  return;
+  return res.status(500).json(new Error("Internal Server Error"));
 });
 
 // Update
@@ -147,7 +147,7 @@ tripController.put(
       console.error(error);
       res.status(500).json(error);
     }
-    return;
+    return res.status(500).json(new Error("Internal Server Error"));
   }
 );
 
@@ -174,7 +174,7 @@ tripController.delete(
       console.error(error);
       res.status(500).json({ message: "Internal Server Error" });
     }
-    return;
+    return res.status(500).json(new Error("Internal Server Error"));
   }
 );
 

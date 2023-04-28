@@ -37,7 +37,7 @@ tslib_1.__decorate([
 ], Post.prototype, "created", void 0);
 tslib_1.__decorate([
     (0, typeorm_1.ManyToOne)(() => User_entity_1.User, { nullable: false, onDelete: "CASCADE" }),
-    tslib_1.__metadata("design:type", Object)
+    tslib_1.__metadata("design:type", User_entity_1.User)
 ], Post.prototype, "user", void 0);
 tslib_1.__decorate([
     (0, typeorm_1.OneToMany)(() => Comment_entity_1.Comment, (comment) => comment.post),
@@ -45,7 +45,8 @@ tslib_1.__decorate([
 ], Post.prototype, "comments", void 0);
 Post = tslib_1.__decorate([
     (0, typeorm_1.Entity)(),
-    tslib_1.__metadata("design:paramtypes", [String, Object, String, Date, Object])
+    tslib_1.__metadata("design:paramtypes", [String, String, String, Date,
+        User_entity_1.User])
 ], Post);
 exports.Post = Post;
 //# sourceMappingURL=Post.entity.js.map

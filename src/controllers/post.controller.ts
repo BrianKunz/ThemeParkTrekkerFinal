@@ -144,7 +144,7 @@ postController.put("/:id", async (req: Request, res: Response) => {
     console.error(error);
     res.status(401).json({ message: "Unauthorized" });
   }
-  return;
+  return res.status(500).json(new Error("Internal Server Error"));
 });
 
 // Delete
@@ -203,7 +203,7 @@ postController.delete("/:id", async (req, res) => {
     console.error(error);
     res.status(500).json(error);
   }
-  return;
+  return res.status(500).json(new Error("Internal Server Error"));
 });
 
 export default postController;

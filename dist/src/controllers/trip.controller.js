@@ -36,7 +36,7 @@ const authorize = (req, res, next) => tslib_1.__awaiter(void 0, void 0, void 0, 
         console.error(error);
         res.status(500).json({ message: "Internal Server Error" });
     }
-    return;
+    return res.status(401).json({ message: "Unauthorized" });
 });
 // Index
 tripController.get("/", authorize, (req, res) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
@@ -67,7 +67,7 @@ tripController.get("/:id", authorize, (req, res) => tslib_1.__awaiter(void 0, vo
         console.error(error);
         res.status(500).json({ message: "Internal Server Error" });
     }
-    return;
+    return res.status(500).json(new Error("Internal Server Error"));
 }));
 // Create
 tripController.post("/", authorize, (req, res) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
@@ -87,7 +87,7 @@ tripController.post("/", authorize, (req, res) => tslib_1.__awaiter(void 0, void
         console.error(error);
         res.status(500).json(error);
     }
-    return;
+    return res.status(500).json(new Error("Internal Server Error"));
 }));
 // Update
 tripController.put("/:id", authorize, (req, res) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
@@ -107,7 +107,7 @@ tripController.put("/:id", authorize, (req, res) => tslib_1.__awaiter(void 0, vo
         console.error(error);
         res.status(500).json(error);
     }
-    return;
+    return res.status(500).json(new Error("Internal Server Error"));
 }));
 // Delete
 tripController.delete("/:id", authorize, (req, res) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
@@ -126,7 +126,7 @@ tripController.delete("/:id", authorize, (req, res) => tslib_1.__awaiter(void 0,
         console.error(error);
         res.status(500).json({ message: "Internal Server Error" });
     }
-    return;
+    return res.status(500).json(new Error("Internal Server Error"));
 }));
 exports.default = tripController;
 //# sourceMappingURL=trip.controller.js.map
