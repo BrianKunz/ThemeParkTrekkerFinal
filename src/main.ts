@@ -9,7 +9,6 @@ import commentController from "./controllers/comment.controller";
 import morgan from "morgan";
 import cors from "cors";
 const session = require("express-session");
-// import session from "express-session";
 const secret = process.env.SESSION_SECRET || "default-secret";
 
 const PORT = 3000;
@@ -19,10 +18,13 @@ const app = express();
 app.use(express.json());
 app.use(morgan("dev"));
 
-app.use(express.static(path.join(__dirname, "..", "build")));
+app.use(
+  "/static",
+  express.static(path.join(__dirname, "..", "..", "build", "static"))
+);
 
 app.get("*", (_, res) => {
-  res.sendFile(path.join(__dirname, "..", "build", "index.html"));
+  res.sendFile(path.join(__dirname, "..", "..", "build", "index.html"));
 });
 
 const corsOptions = {
