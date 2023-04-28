@@ -1,7 +1,7 @@
 import axios from "axios";
 import { Comment } from "../entities/Comment.entity";
 
-const baseURL = "/comments/";
+const baseURL = "https://themeparktrekker.herokuapp.com/comments/";
 
 export const commentService = {
   getAll: async (): Promise<Comment[]> => {

@@ -1,7 +1,7 @@
 import axios from "axios";
 import { Trip } from "../entities/Trip.entity";
 
-const baseURL = "/trips/";
+const baseURL = "https://themeparktrekker.herokuapp.com/trips/";
 
 export const tripService = {
   getAll: async (): Promise<Trip[]> => {

@@ -70,6 +70,5 @@
     "ts-jest": "^28.0.3",
     "ts-node": "^10.9.1",
     "typedoc": "^0.22.15"
-  },
-  "proxy": "http://localhost:3001"
+  }
 }

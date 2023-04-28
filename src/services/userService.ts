@@ -1,7 +1,7 @@
 import axios from "axios";
 import { User } from "../entities/User.entity";
 
-const baseURL = "localhost:3001/users/";
+const baseURL = "https://themeparktrekker.herokuapp.com/users/";
 
 export const userService = {
   getAll: async (): Promise<User[]> => {
