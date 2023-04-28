@@ -10,7 +10,7 @@
   "main": "src/main.ts",
   "scripts": {
     "start": "node dist/src/main.js",
-    "build": "webpack --config webpack.config.js",
+    "build": "webpack --config webpack.config.js && tsc",
     "build:backend": "tsc",
     "postinstall": "yarn build",
     "watch-node": "nodemon dist/tsc/src/main.js",
