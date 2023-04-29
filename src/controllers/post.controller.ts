@@ -5,6 +5,13 @@ import jwt from "jsonwebtoken";
 
 const postController = express.Router();
 
+// declare module "express-session" {
+//   interface Session {
+//     userId?: number;
+//     token?: string;
+//   }
+// }
+
 // Index
 postController.get("/", async (req: Request, res: Response) => {
   try {
@@ -42,7 +49,9 @@ postController.get("/:id", async (req, res) => {
 // Create
 postController.post("/", async (req: Request, res: Response) => {
   const { title, image, description } = req.body;
-  const token = sessionStorage.getItem("accessToken");
+  const token = req.headers.authorization?.split(" ")[1];
+  console.log("token:", token);
+
   if (!token) {
     throw new Error("Token is missing");
   }
@@ -71,6 +80,7 @@ postController.post("/", async (req: Request, res: Response) => {
   }
 });
 
+// Update
 postController.put("/:id", async (req: Request, res: Response) => {
   const { title, image, description } = req.body;
   const { id } = req.params;
@@ -80,12 +90,37 @@ postController.put("/:id", async (req: Request, res: Response) => {
     throw new Error("Token is missing");
   }
 
-  try {
-    const userId = sessionStorage.getItem("userId");
+  const secret = process.env.JWT_SECRET || "default-secret";
 
-    if (!userId || userId !== process.env.ADMIN_USER_ID) {
+  try {
+    const decodedToken = jwt.verify(token, secret) as { userId: string };
+    console.log("decodedToken:", decodedToken);
+
+    const userId = decodedToken.userId.toString();
+    console.log("userId:", userId);
+
+    console.log("userId:", typeof userId, userId);
+    console.log(
+      "ADMIN_USER_ID:",
+      typeof process.env.ADMIN_USER_ID,
+      process.env.ADMIN_USER_ID
+    );
+
+    // Check if user is an admin
+    if (userId !== process.env.ADMIN_USER_ID) {
       throw new Error("Unauthorized");
     }
+    console.log(
+      "userId === ADMIN_USER_ID:",
+      userId === process.env.ADMIN_USER_ID
+    );
+
+    console.log("userId:", typeof userId, userId);
+    console.log(
+      "ADMIN_USER_ID:",
+      typeof process.env.ADMIN_USER_ID,
+      process.env.ADMIN_USER_ID
+    );
 
     const { rows: postRows } = await pool.query<Post>(
       "SELECT * FROM posts WHERE id = $1",

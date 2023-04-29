@@ -53122,6 +53122,12 @@ exports.userService = {
         const userId = response.data.user.id;
         sessionStorage.setItem("accessToken", token);
         sessionStorage.setItem("userId", userId);
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        };
+        axios_1.default.defaults.headers.common = config.headers;
         return response.data;
     }),
     getCurrentUser: () => tslib_1.__awaiter(void 0, void 0, void 0, function* () {

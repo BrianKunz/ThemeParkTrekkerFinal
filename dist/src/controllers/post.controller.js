@@ -34,8 +34,10 @@ postController.get("/:id", (req, res) => tslib_1.__awaiter(void 0, void 0, void 
     return res.status(500).json({ message: "Unknown Error" });
 }));
 postController.post("/", (req, res) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     const { title, image, description } = req.body;
-    const token = sessionStorage.getItem("accessToken");
+    const token = (_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(" ")[1];
+    console.log("token:", token);
     if (!token) {
         throw new Error("Token is missing");
     }
@@ -56,18 +58,27 @@ postController.post("/", (req, res) => tslib_1.__awaiter(void 0, void 0, void 0,
     }
 }));
 postController.put("/:id", (req, res) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-    var _a;
+    var _b;
     const { title, image, description } = req.body;
     const { id } = req.params;
-    const token = (_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(" ")[1];
+    const token = (_b = req.headers.authorization) === null || _b === void 0 ? void 0 : _b.split(" ")[1];
     if (!token) {
         throw new Error("Token is missing");
     }
+    const secret = process.env.JWT_SECRET || "default-secret";
     try {
-        const userId = sessionStorage.getItem("userId");
-        if (!userId || userId !== process.env.ADMIN_USER_ID) {
+        const decodedToken = jsonwebtoken_1.default.verify(token, secret);
+        console.log("decodedToken:", decodedToken);
+        const userId = decodedToken.userId.toString();
+        console.log("userId:", userId);
+        console.log("userId:", typeof userId, userId);
+        console.log("ADMIN_USER_ID:", typeof process.env.ADMIN_USER_ID, process.env.ADMIN_USER_ID);
+        if (userId !== process.env.ADMIN_USER_ID) {
             throw new Error("Unauthorized");
         }
+        console.log("userId === ADMIN_USER_ID:", userId === process.env.ADMIN_USER_ID);
+        console.log("userId:", typeof userId, userId);
+        console.log("ADMIN_USER_ID:", typeof process.env.ADMIN_USER_ID, process.env.ADMIN_USER_ID);
         const { rows: postRows } = yield database_1.default.query("SELECT * FROM posts WHERE id = $1", [id]);
         const post = postRows[0];
         if (!post) {
@@ -83,9 +94,9 @@ postController.put("/:id", (req, res) => tslib_1.__awaiter(void 0, void 0, void 
     return res.status(500).json(new Error("Internal Server Error"));
 }));
 postController.delete("/:id", (req, res) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-    var _b;
+    var _c;
     const { id } = req.params;
-    const token = (_b = req.headers.authorization) === null || _b === void 0 ? void 0 : _b.split(" ")[1];
+    const token = (_c = req.headers.authorization) === null || _c === void 0 ? void 0 : _c.split(" ")[1];
     if (!token) {
         throw new Error("Token is missing");
     }

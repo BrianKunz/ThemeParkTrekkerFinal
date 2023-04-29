@@ -19,8 +19,18 @@ export const userService = {
     const userId = response.data.user.id;
     sessionStorage.setItem("accessToken", token);
     sessionStorage.setItem("userId", userId);
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    axios.defaults.headers.common = config.headers;
+
     return response.data;
   },
+
   getCurrentUser: async () => {
     const userString = sessionStorage.getItem("user");
     if (userString) {
