@@ -20,9 +20,10 @@ app.use((0, morgan_1.default)("dev"));
 app.get("/favicon.ico", (_, res) => {
     res.status(204).end();
 });
-app.use(express_1.default.static(path_1.default.join(__dirname, "/dist")));
+app.use(express_1.default.static(path_1.default.join(__dirname, "dist")));
+app.use(express_1.default.static(path_1.default.join(__dirname, "public")));
 app.get("*", (_, res) => {
-    res.sendFile(path_1.default.join(__dirname, "dist", "index.html"));
+    res.sendFile(path_1.default.join(__dirname, "public", "index.html"));
 });
 const corsOptions = {
     origin: "*",
