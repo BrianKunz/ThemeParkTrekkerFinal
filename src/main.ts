@@ -36,6 +36,11 @@ app.use(
     cookie: { secure: true },
   })
 );
+app.use(express.static("./"));
+
+app.get("/*", (_, res) => {
+  res.sendFile(path.join(__dirname, "..", "..", "public", "index.html"));
+});
 
 app.use("/users", userController);
 app.use("/posts", postController);
@@ -44,12 +49,6 @@ app.use("/comments", commentController);
 
 app.get("/", (_, res) => {
   res.redirect("/posts");
-});
-
-app.use(express.static("./"));
-
-app.get("/*", (_, res) => {
-  res.sendFile(path.join(__dirname, "..", "..", "public", "index.html"));
 });
 
 app.listen(PORT, () => {
