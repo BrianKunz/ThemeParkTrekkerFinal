@@ -15,7 +15,13 @@ export const postService = {
   },
 
   create: async (post: Post): Promise<Post> => {
-    const response = await axios.post(baseURL, post);
+    const token = sessionStorage.getItem("accessToken");
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const response = await axios.post(baseURL, post, config);
     return response.data;
   },
 

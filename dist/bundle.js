@@ -53015,7 +53015,13 @@ exports.postService = {
         return response.data;
     }),
     create: (post) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-        const response = yield axios_1.default.post(baseURL, post);
+        const token = sessionStorage.getItem("accessToken");
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        };
+        const response = yield axios_1.default.post(baseURL, post, config);
         return response.data;
     }),
     update: (id, post) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
