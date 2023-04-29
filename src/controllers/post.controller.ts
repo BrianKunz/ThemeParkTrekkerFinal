@@ -18,7 +18,6 @@ postController.get("/", async (_, res) => {
   try {
     const { rows } = await pool.query<Post>("SELECT * FROM posts");
     res.json(rows);
-    console.log(rows);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
@@ -53,7 +52,8 @@ postController.post("/", async (req: Request, res: Response) => {
     config && config.headers && config.headers.Authorization.split(" ")[1];
 
   console.log("token:", token);
-  console.log(req.headers);
+  console.log("config: ", config);
+  console.log("header:", req.headers);
 
   if (!token) {
     throw new Error("Token is missing");

@@ -10,7 +10,6 @@ postController.get("/", (_, res) => tslib_1.__awaiter(void 0, void 0, void 0, fu
     try {
         const { rows } = yield database_1.default.query("SELECT * FROM posts");
         res.json(rows);
-        console.log(rows);
     }
     catch (error) {
         console.error(error);
@@ -38,7 +37,8 @@ postController.post("/", (req, res) => tslib_1.__awaiter(void 0, void 0, void 0,
     const config = useUserStore_1.useUserStore.getState().currentUser.config;
     const token = config && config.headers && config.headers.Authorization.split(" ")[1];
     console.log("token:", token);
-    console.log(req.headers);
+    console.log("config: ", config);
+    console.log("header:", req.headers);
     if (!token) {
         throw new Error("Token is missing");
     }
