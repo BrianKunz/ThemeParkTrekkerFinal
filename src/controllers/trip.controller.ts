@@ -47,9 +47,9 @@ const authorize = async (
     }
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Internal Server Error" });
+    return res.status(500).json({ message: "Internal Server Error" });
   }
-  return res.status(500).json({ message: "Internal Server Error" });
+  return next();
 };
 
 // Index
@@ -89,7 +89,7 @@ tripController.get(
       console.error(error);
       res.status(500).json({ message: "Internal Server Error" });
     }
-    return res.status(500).json(new Error("Internal Server Error"));
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 );
 
@@ -99,11 +99,11 @@ tripController.post("/", authorize, async (req: AuthRequest, res: Response) => {
   const userId = req.user?.id;
 
   try {
-    const userRepository = pool.query<User>(
+    const { rows: userRows } = await pool.query<User>(
       "SELECT * FROM users WHERE id = $1",
       [userId]
     );
-    const user = (await userRepository).rows[0];
+    const user = userRows[0];
     if (!user) {
       return res.status(404).json({ message: "User Not Found" });
     }
@@ -114,9 +114,9 @@ tripController.post("/", authorize, async (req: AuthRequest, res: Response) => {
     res.json(rows[0]);
   } catch (error) {
     console.error(error);
-    res.status(500).json(error);
+    res.status(500).json({ message: "Internal Server Error" });
   }
-  return res.status(500).json(new Error("Internal Server Error"));
+  return res.status(500).json({ message: "Internal Server Error" });
 });
 
 // Update
@@ -144,9 +144,9 @@ tripController.put(
       res.json(result.rows[0]);
     } catch (error) {
       console.error(error);
-      res.status(500).json(error);
+      res.status(500).json({ message: "Internal Server Error" });
     }
-    return res.status(500).json(new Error("Internal Server Error"));
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 );
 
@@ -173,7 +173,7 @@ tripController.delete(
       console.error(error);
       res.status(500).json({ message: "Internal Server Error" });
     }
-    return res.status(500).json(new Error("Internal Server Error"));
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 );
 

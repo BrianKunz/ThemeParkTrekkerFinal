@@ -29,9 +29,9 @@ const authorize = (req, res, next) => tslib_1.__awaiter(void 0, void 0, void 0, 
     }
     catch (error) {
         console.error(error);
-        res.status(500).json({ message: "Internal Server Error" });
+        return res.status(500).json({ message: "Internal Server Error" });
     }
-    return res.status(500).json({ message: "Internal Server Error" });
+    return next();
 });
 tripController.get("/", authorize, (req, res) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     var _a;
@@ -60,15 +60,15 @@ tripController.get("/:id", authorize, (req, res) => tslib_1.__awaiter(void 0, vo
         console.error(error);
         res.status(500).json({ message: "Internal Server Error" });
     }
-    return res.status(500).json(new Error("Internal Server Error"));
+    return res.status(500).json({ message: "Internal Server Error" });
 }));
 tripController.post("/", authorize, (req, res) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     var _c;
     const { title, date, start_date, end_date, flight } = req.body;
     const userId = (_c = req.user) === null || _c === void 0 ? void 0 : _c.id;
     try {
-        const userRepository = database_1.default.query("SELECT * FROM users WHERE id = $1", [userId]);
-        const user = (yield userRepository).rows[0];
+        const { rows: userRows } = yield database_1.default.query("SELECT * FROM users WHERE id = $1", [userId]);
+        const user = userRows[0];
         if (!user) {
             return res.status(404).json({ message: "User Not Found" });
         }
@@ -77,9 +77,9 @@ tripController.post("/", authorize, (req, res) => tslib_1.__awaiter(void 0, void
     }
     catch (error) {
         console.error(error);
-        res.status(500).json(error);
+        res.status(500).json({ message: "Internal Server Error" });
     }
-    return res.status(500).json(new Error("Internal Server Error"));
+    return res.status(500).json({ message: "Internal Server Error" });
 }));
 tripController.put("/:id", authorize, (req, res) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     var _d;
@@ -96,9 +96,9 @@ tripController.put("/:id", authorize, (req, res) => tslib_1.__awaiter(void 0, vo
     }
     catch (error) {
         console.error(error);
-        res.status(500).json(error);
+        res.status(500).json({ message: "Internal Server Error" });
     }
-    return res.status(500).json(new Error("Internal Server Error"));
+    return res.status(500).json({ message: "Internal Server Error" });
 }));
 tripController.delete("/:id", authorize, (req, res) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     var _e;
@@ -116,7 +116,7 @@ tripController.delete("/:id", authorize, (req, res) => tslib_1.__awaiter(void 0,
         console.error(error);
         res.status(500).json({ message: "Internal Server Error" });
     }
-    return res.status(500).json(new Error("Internal Server Error"));
+    return res.status(500).json({ message: "Internal Server Error" });
 }));
 exports.default = tripController;
 //# sourceMappingURL=trip.controller.js.map

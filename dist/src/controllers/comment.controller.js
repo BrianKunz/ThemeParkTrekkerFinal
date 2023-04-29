@@ -4,9 +4,10 @@ const tslib_1 = require("tslib");
 const express_1 = tslib_1.__importDefault(require("express"));
 const database_1 = tslib_1.__importDefault(require("../../database"));
 const jsonwebtoken_1 = tslib_1.__importDefault(require("jsonwebtoken"));
+const cookie_1 = require("../../helpers/cookie");
 const commentController = express_1.default.Router();
 const authorize = (req, res, next) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-    const token = req.cookies.accessToken;
+    const token = (0, cookie_1.getCookie)("accessToken");
     if (!token) {
         return res.status(401).json({ message: "Unauthorized" });
     }
@@ -60,13 +61,12 @@ commentController.post("/:postId", authorize, (req, res) => tslib_1.__awaiter(vo
             return res.status(404).json({ message: "Post not found" });
         }
         const result = yield database_1.default.query("INSERT INTO comments (body, post_id, user_id) VALUES ($1, $2, $3) RETURNING *", [body, postId, userId]);
-        res.json(result.rows[0]);
+        return res.json(result.rows[0]);
     }
     catch (error) {
         console.error(error);
-        res.status(500).json({ message: "Internal Server Error" });
+        return res.status(500).json({ message: "Internal Server Error" });
     }
-    return res.status(500).json(new Error("Internal Server Error"));
 }));
 commentController.delete("/:commentId", authorize, (req, res) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     var _b;
@@ -81,12 +81,13 @@ commentController.delete("/:commentId", authorize, (req, res) => tslib_1.__await
             return res.status(404).json({ message: "Comment not found" });
         }
         res.status(204).send();
+        return;
     }
     catch (error) {
         console.error(error);
         res.status(500).json({ message: "Internal Server Error" });
+        return;
     }
-    return res.status(500).json(new Error("Internal Server Error"));
 }));
 exports.default = commentController;
 //# sourceMappingURL=comment.controller.js.map

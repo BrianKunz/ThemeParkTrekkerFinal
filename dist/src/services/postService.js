@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.postService = void 0;
 const tslib_1 = require("tslib");
 const axios_1 = tslib_1.__importDefault(require("axios"));
+const cookie_1 = require("../../helpers/cookie");
 const baseURL = "https://themeparktrekker.herokuapp.com/posts/";
 exports.postService = {
     getAll: () => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
@@ -14,10 +15,7 @@ exports.postService = {
         return response.data;
     }),
     create: (post) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-        var _a;
-        const token = (_a = document.cookie
-            .split("; ")
-            .find((row) => row.startsWith("accessToken="))) === null || _a === void 0 ? void 0 : _a.split("=")[1];
+        const token = (0, cookie_1.getCookie)("accessToken");
         const config = {
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -27,10 +25,7 @@ exports.postService = {
         return response.data;
     }),
     update: (id, post) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-        var _b;
-        const token = (_b = document.cookie
-            .split("; ")
-            .find((row) => row.startsWith("accessToken="))) === null || _b === void 0 ? void 0 : _b.split("=")[1];
+        const token = (0, cookie_1.getCookie)("accessToken");
         const config = {
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -40,10 +35,7 @@ exports.postService = {
         return response.data;
     }),
     delete: (id) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-        var _c;
-        const token = (_c = document.cookie
-            .split("; ")
-            .find((row) => row.startsWith("accessToken="))) === null || _c === void 0 ? void 0 : _c.split("=")[1];
+        const token = (0, cookie_1.getCookie)("accessToken");
         const config = {
             headers: {
                 Authorization: `Bearer ${token}`,

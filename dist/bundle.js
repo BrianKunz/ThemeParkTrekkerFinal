@@ -4231,6 +4231,286 @@ function getTargetMatch(matches, location) {
 
 /***/ }),
 
+/***/ "./node_modules/cookie/index.js":
+/*!**************************************!*\
+  !*** ./node_modules/cookie/index.js ***!
+  \**************************************/
+/***/ (function(__unused_webpack_module, exports) {
+
+/*!
+ * cookie
+ * Copyright(c) 2012-2014 Roman Shtylman
+ * Copyright(c) 2015 Douglas Christopher Wilson
+ * MIT Licensed
+ */
+
+
+
+/**
+ * Module exports.
+ * @public
+ */
+
+exports.parse = parse;
+exports.serialize = serialize;
+
+/**
+ * Module variables.
+ * @private
+ */
+
+var __toString = Object.prototype.toString
+
+/**
+ * RegExp to match field-content in RFC 7230 sec 3.2
+ *
+ * field-content = field-vchar [ 1*( SP / HTAB ) field-vchar ]
+ * field-vchar   = VCHAR / obs-text
+ * obs-text      = %x80-FF
+ */
+
+var fieldContentRegExp = /^[\u0009\u0020-\u007e\u0080-\u00ff]+$/;
+
+/**
+ * Parse a cookie header.
+ *
+ * Parse the given cookie header string into an object
+ * The object has the various cookies as keys(names) => values
+ *
+ * @param {string} str
+ * @param {object} [options]
+ * @return {object}
+ * @public
+ */
+
+function parse(str, options) {
+  if (typeof str !== 'string') {
+    throw new TypeError('argument str must be a string');
+  }
+
+  var obj = {}
+  var opt = options || {};
+  var dec = opt.decode || decode;
+
+  var index = 0
+  while (index < str.length) {
+    var eqIdx = str.indexOf('=', index)
+
+    // no more cookie pairs
+    if (eqIdx === -1) {
+      break
+    }
+
+    var endIdx = str.indexOf(';', index)
+
+    if (endIdx === -1) {
+      endIdx = str.length
+    } else if (endIdx < eqIdx) {
+      // backtrack on prior semicolon
+      index = str.lastIndexOf(';', eqIdx - 1) + 1
+      continue
+    }
+
+    var key = str.slice(index, eqIdx).trim()
+
+    // only assign once
+    if (undefined === obj[key]) {
+      var val = str.slice(eqIdx + 1, endIdx).trim()
+
+      // quoted values
+      if (val.charCodeAt(0) === 0x22) {
+        val = val.slice(1, -1)
+      }
+
+      obj[key] = tryDecode(val, dec);
+    }
+
+    index = endIdx + 1
+  }
+
+  return obj;
+}
+
+/**
+ * Serialize data into a cookie header.
+ *
+ * Serialize the a name value pair into a cookie string suitable for
+ * http headers. An optional options object specified cookie parameters.
+ *
+ * serialize('foo', 'bar', { httpOnly: true })
+ *   => "foo=bar; httpOnly"
+ *
+ * @param {string} name
+ * @param {string} val
+ * @param {object} [options]
+ * @return {string}
+ * @public
+ */
+
+function serialize(name, val, options) {
+  var opt = options || {};
+  var enc = opt.encode || encode;
+
+  if (typeof enc !== 'function') {
+    throw new TypeError('option encode is invalid');
+  }
+
+  if (!fieldContentRegExp.test(name)) {
+    throw new TypeError('argument name is invalid');
+  }
+
+  var value = enc(val);
+
+  if (value && !fieldContentRegExp.test(value)) {
+    throw new TypeError('argument val is invalid');
+  }
+
+  var str = name + '=' + value;
+
+  if (null != opt.maxAge) {
+    var maxAge = opt.maxAge - 0;
+
+    if (isNaN(maxAge) || !isFinite(maxAge)) {
+      throw new TypeError('option maxAge is invalid')
+    }
+
+    str += '; Max-Age=' + Math.floor(maxAge);
+  }
+
+  if (opt.domain) {
+    if (!fieldContentRegExp.test(opt.domain)) {
+      throw new TypeError('option domain is invalid');
+    }
+
+    str += '; Domain=' + opt.domain;
+  }
+
+  if (opt.path) {
+    if (!fieldContentRegExp.test(opt.path)) {
+      throw new TypeError('option path is invalid');
+    }
+
+    str += '; Path=' + opt.path;
+  }
+
+  if (opt.expires) {
+    var expires = opt.expires
+
+    if (!isDate(expires) || isNaN(expires.valueOf())) {
+      throw new TypeError('option expires is invalid');
+    }
+
+    str += '; Expires=' + expires.toUTCString()
+  }
+
+  if (opt.httpOnly) {
+    str += '; HttpOnly';
+  }
+
+  if (opt.secure) {
+    str += '; Secure';
+  }
+
+  if (opt.priority) {
+    var priority = typeof opt.priority === 'string'
+      ? opt.priority.toLowerCase()
+      : opt.priority
+
+    switch (priority) {
+      case 'low':
+        str += '; Priority=Low'
+        break
+      case 'medium':
+        str += '; Priority=Medium'
+        break
+      case 'high':
+        str += '; Priority=High'
+        break
+      default:
+        throw new TypeError('option priority is invalid')
+    }
+  }
+
+  if (opt.sameSite) {
+    var sameSite = typeof opt.sameSite === 'string'
+      ? opt.sameSite.toLowerCase() : opt.sameSite;
+
+    switch (sameSite) {
+      case true:
+        str += '; SameSite=Strict';
+        break;
+      case 'lax':
+        str += '; SameSite=Lax';
+        break;
+      case 'strict':
+        str += '; SameSite=Strict';
+        break;
+      case 'none':
+        str += '; SameSite=None';
+        break;
+      default:
+        throw new TypeError('option sameSite is invalid');
+    }
+  }
+
+  return str;
+}
+
+/**
+ * URL-decode string value. Optimized to skip native call when no %.
+ *
+ * @param {string} str
+ * @returns {string}
+ */
+
+function decode (str) {
+  return str.indexOf('%') !== -1
+    ? decodeURIComponent(str)
+    : str
+}
+
+/**
+ * URL-encode value.
+ *
+ * @param {string} str
+ * @returns {string}
+ */
+
+function encode (val) {
+  return encodeURIComponent(val)
+}
+
+/**
+ * Determine if value is a Date.
+ *
+ * @param {*} val
+ * @private
+ */
+
+function isDate (val) {
+  return __toString.call(val) === '[object Date]' ||
+    val instanceof Date
+}
+
+/**
+ * Try decoding a string using a decoding function.
+ *
+ * @param {string} str
+ * @param {function} decode
+ * @private
+ */
+
+function tryDecode(str, decode) {
+  try {
+    return decode(str);
+  } catch (e) {
+    return str;
+  }
+}
+
+
+/***/ }),
+
 /***/ "./node_modules/date-fns/esm/_lib/addLeadingZeros/index.js":
 /*!*****************************************************************!*\
   !*** ./node_modules/date-fns/esm/_lib/addLeadingZeros/index.js ***!
@@ -52279,6 +52559,30 @@ if (false) {} else {
 
 /***/ }),
 
+/***/ "./helpers/cookie.ts":
+/*!***************************!*\
+  !*** ./helpers/cookie.ts ***!
+  \***************************/
+/***/ (function(__unused_webpack_module, exports) {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.getCookie = void 0;
+const getCookie = (name) => {
+    const cookies = document.cookie.split("; ");
+    for (const cookie of cookies) {
+        const [cookieName, cookieValue] = cookie.split("=");
+        if (cookieName === name) {
+            return decodeURIComponent(cookieValue);
+        }
+    }
+    return null;
+};
+exports.getCookie = getCookie;
+
+
+/***/ }),
+
 /***/ "./src/App.tsx":
 /*!*********************!*\
   !*** ./src/App.tsx ***!
@@ -53009,6 +53313,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.postService = void 0;
 const tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 const axios_1 = tslib_1.__importDefault(__webpack_require__(/*! axios */ "./node_modules/axios/dist/browser/axios.cjs"));
+const cookie_1 = __webpack_require__(/*! ../../helpers/cookie */ "./helpers/cookie.ts");
 const baseURL = "https://themeparktrekker.herokuapp.com/posts/";
 exports.postService = {
     getAll: () => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
@@ -53020,10 +53325,7 @@ exports.postService = {
         return response.data;
     }),
     create: (post) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-        var _a;
-        const token = (_a = document.cookie
-            .split("; ")
-            .find((row) => row.startsWith("accessToken="))) === null || _a === void 0 ? void 0 : _a.split("=")[1];
+        const token = (0, cookie_1.getCookie)("accessToken");
         const config = {
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -53033,10 +53335,7 @@ exports.postService = {
         return response.data;
     }),
     update: (id, post) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-        var _b;
-        const token = (_b = document.cookie
-            .split("; ")
-            .find((row) => row.startsWith("accessToken="))) === null || _b === void 0 ? void 0 : _b.split("=")[1];
+        const token = (0, cookie_1.getCookie)("accessToken");
         const config = {
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -53046,10 +53345,7 @@ exports.postService = {
         return response.data;
     }),
     delete: (id) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-        var _c;
-        const token = (_c = document.cookie
-            .split("; ")
-            .find((row) => row.startsWith("accessToken="))) === null || _c === void 0 ? void 0 : _c.split("=")[1];
+        const token = (0, cookie_1.getCookie)("accessToken");
         const config = {
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -53076,24 +53372,16 @@ const axios_1 = tslib_1.__importDefault(__webpack_require__(/*! axios */ "./node
 const baseURL = "https://themeparktrekker.herokuapp.com/trips/";
 exports.tripService = {
     getAll: () => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-        var _a;
-        const token = (_a = document.cookie
-            .split("; ")
-            .find((row) => row.startsWith("accessToken="))) === null || _a === void 0 ? void 0 : _a.split("=")[1];
-        console.log(token);
+        const token = getCookie("accessToken");
         const response = yield axios_1.default.get(baseURL, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
         });
-        console.log(response);
         return response.data;
     }),
     getOne: (id) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-        var _b;
-        const token = (_b = document.cookie
-            .split("; ")
-            .find((row) => row.startsWith("accessToken="))) === null || _b === void 0 ? void 0 : _b.split("=")[1];
+        const token = getCookie("accessToken");
         const response = yield axios_1.default.get(baseURL + id, {
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -53102,10 +53390,7 @@ exports.tripService = {
         return response.data;
     }),
     create: (trip) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-        var _c;
-        const token = (_c = document.cookie
-            .split("; ")
-            .find((row) => row.startsWith("accessToken="))) === null || _c === void 0 ? void 0 : _c.split("=")[1];
+        const token = getCookie("accessToken");
         const response = yield axios_1.default.post(baseURL, trip, {
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -53114,10 +53399,7 @@ exports.tripService = {
         return response.data;
     }),
     update: (id, trip) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-        var _d;
-        const token = (_d = document.cookie
-            .split("; ")
-            .find((row) => row.startsWith("accessToken="))) === null || _d === void 0 ? void 0 : _d.split("=")[1];
+        const token = getCookie("accessToken");
         const response = yield axios_1.default.put(baseURL + id, trip, {
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -53126,10 +53408,7 @@ exports.tripService = {
         return response.data;
     }),
     delete: (id) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-        var _e;
-        const token = (_e = document.cookie
-            .split("; ")
-            .find((row) => row.startsWith("accessToken="))) === null || _e === void 0 ? void 0 : _e.split("=")[1];
+        const token = getCookie("accessToken");
         yield axios_1.default.delete(baseURL + id, {
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -53137,6 +53416,15 @@ exports.tripService = {
         });
     }),
 };
+function getCookie(name) {
+    var _a;
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) {
+        return (_a = parts.pop()) === null || _a === void 0 ? void 0 : _a.split(";").shift();
+    }
+    return null;
+}
 
 
 /***/ }),
@@ -53152,6 +53440,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.userService = void 0;
 const tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 const axios_1 = tslib_1.__importDefault(__webpack_require__(/*! axios */ "./node_modules/axios/dist/browser/axios.cjs"));
+const cookie_1 = tslib_1.__importDefault(__webpack_require__(/*! cookie */ "./node_modules/cookie/index.js"));
 const baseURL = "https://themeparktrekker.herokuapp.com/users/";
 exports.userService = {
     getAll: () => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
@@ -53167,7 +53456,9 @@ exports.userService = {
         const response = yield axios_1.default.post(`${baseURL}login`, user);
         const token = response.data.token;
         const userId = response.data.user.id;
-        document.cookie = `accessToken=${token}`;
+        const options = { httpOnly: true };
+        const cookies = cookie_1.default.serialize("accessToken", token, options);
+        document.cookie = cookies;
         const config = {
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -53177,19 +53468,16 @@ exports.userService = {
         return { response: response.data, userId, config: config };
     }),
     getCurrentUser: () => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-        const cookies = document.cookie.split("; ");
-        for (const cookie of cookies) {
-            const [name, value] = cookie.split("=");
-            if (name === "accessToken") {
-                const token = decodeURIComponent(value);
-                const config = {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                };
-                axios_1.default.defaults.headers.common = config.headers;
-                return axios_1.default.get(`${baseURL}me`).then((response) => response.data);
-            }
+        const cookies = cookie_1.default.parse(document.cookie);
+        const token = cookies["accessToken"];
+        if (token) {
+            const config = {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            };
+            axios_1.default.defaults.headers.common = config.headers;
+            return axios_1.default.get(`${baseURL}me`).then((response) => response.data);
         }
         return null;
     }),

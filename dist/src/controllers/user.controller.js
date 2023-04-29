@@ -49,17 +49,10 @@ userController.post("/login", (req, res) => tslib_1.__awaiter(void 0, void 0, vo
             res.status(401).json("Invalid username or password");
             return;
         }
-        const isAdmin = user.admin === true;
         const secret = process.env.JWT_SECRET || "default-secret";
         const token = jsonwebtoken_1.default.sign({ userId: user.id }, secret);
         res.cookie("accessToken", token, { httpOnly: true });
-        const sessionID = req.sessionID;
-        if (sessionID) {
-            res.json({ user: Object.assign(Object.assign({}, user), { isAdmin }), session_id: sessionID });
-        }
-        else {
-            res.status(500).json("sessionID is not defined");
-        }
+        res.json({ message: "Logged in successfully" });
     }
     catch (error) {
         console.error(error);

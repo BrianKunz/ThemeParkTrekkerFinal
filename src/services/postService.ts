@@ -1,5 +1,6 @@
 import axios from "axios";
 import { Post } from "../entities/Post.entity";
+import { getCookie } from "../../helpers/cookie";
 
 const baseURL = "https://themeparktrekker.herokuapp.com/posts/";
 
@@ -15,10 +16,7 @@ export const postService = {
   },
 
   create: async (post: Post): Promise<Post> => {
-    const token = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("accessToken="))
-      ?.split("=")[1];
+    const token = getCookie("accessToken");
     const config = {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -29,10 +27,7 @@ export const postService = {
   },
 
   update: async (id: string, post: Post): Promise<Post> => {
-    const token = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("accessToken="))
-      ?.split("=")[1];
+    const token = getCookie("accessToken");
     const config = {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -43,10 +38,7 @@ export const postService = {
   },
 
   delete: async (id: string): Promise<void> => {
-    const token = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("accessToken="))
-      ?.split("=")[1];
+    const token = getCookie("accessToken");
     const config = {
       headers: {
         Authorization: `Bearer ${token}`,

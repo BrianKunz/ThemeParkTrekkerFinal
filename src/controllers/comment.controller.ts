@@ -4,6 +4,7 @@ import { Post } from "../entities/Post.entity";
 import { User } from "../entities/User.entity";
 import pool from "../../database";
 import jwt from "jsonwebtoken";
+import { getCookie } from "../../helpers/cookie";
 
 const commentController = express.Router();
 
@@ -17,7 +18,8 @@ const authorize = async (
   res: Response,
   next: NextFunction
 ) => {
-  const token = req.cookies.accessToken;
+  const token = getCookie("accessToken");
+
   if (!token) {
     return res.status(401).json({ message: "Unauthorized" });
   }
@@ -102,12 +104,11 @@ commentController.post(
         [body, postId, userId]
       );
 
-      res.json(result.rows[0]);
+      return res.json(result.rows[0]); // <-- Return the response object here
     } catch (error) {
       console.error(error);
-      res.status(500).json({ message: "Internal Server Error" });
+      return res.status(500).json({ message: "Internal Server Error" }); // <-- Return the response object here
     }
-    return res.status(500).json(new Error("Internal Server Error"));
   }
 );
 
@@ -134,11 +135,12 @@ commentController.delete(
       }
 
       res.status(204).send();
+      return;
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: "Internal Server Error" });
+      return;
     }
-    return res.status(500).json(new Error("Internal Server Error"));
   }
 );
 

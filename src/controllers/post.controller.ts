@@ -2,14 +2,44 @@ import express, { Request, Response } from "express";
 import { Post } from "../entities/Post.entity";
 import pool from "../../database";
 import jwt from "jsonwebtoken";
+import { getCookie } from "../../helpers/cookie";
 
 const postController = express.Router();
 
-// function isAdmin(token: string): boolean {
-//   const decodedToken = jwt.decode(token) as { userId: string };
-//   const userId = decodedToken.userId;
-//   return userId === process.env.ADMIN_USER_ID;
-// }
+interface AuthRequest extends Request {
+  user?: { id: string };
+}
+
+const authorize = async (req: AuthRequest, res: Response, next: () => void) => {
+  const token = req.cookies.accessToken;
+  if (!token) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+
+  const secret = process.env.JWT_SECRET || "default-secret";
+
+  try {
+    const decodedToken = jwt.verify(token, secret) as { userId: string };
+    const userId = decodedToken.userId.toString();
+
+    const { rows } = await pool.query<{ id: string }>(
+      "SELECT * FROM users WHERE id = $1",
+      [userId]
+    );
+    const user = rows[0];
+
+    if (!user) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    req.user = user;
+    next();
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+  return next();
+};
 
 // Index
 postController.get("/", async (_, res) => {
@@ -31,31 +61,28 @@ postController.get("/:id", async (req, res) => {
       [id]
     );
     if (!rows.length) {
-      return res.status(404).json({ message: "Not Found" });
+      res.status(404).json({ message: "Not Found" });
+      return Promise.resolve();
     }
     res.json(rows[0]);
+    return Promise.resolve();
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
+    return Promise.reject();
   }
-  return res.status(500).json({ message: "Internal Server Error" });
 });
 
 // Post
-postController.post("/", async (req: Request, res: Response) => {
+postController.post("/", authorize, async (req: AuthRequest, res: Response) => {
   const { title, image, description } = req.body;
-  const token = localStorage.getItem("accessToken");
-  if (!token) {
-    res.status(401).json({ message: "Unauthorized" });
-    return;
+  const userId = req.user?.id;
+
+  if (!userId) {
+    return res.status(401).json({ message: "Unauthorized" });
   }
 
-  const secret = process.env.JWT_SECRET || "default-secret";
-
   try {
-    const decodedToken = jwt.verify(token, secret) as { userId: string };
-    const userId = decodedToken.userId.toString();
-
     const { rows: postRows } = await pool.query<Post>(
       "INSERT INTO posts (title, image, description, user_id) VALUES ($1, $2, $3, $4) RETURNING *",
       [title, image, description, userId]
@@ -65,51 +92,31 @@ postController.post("/", async (req: Request, res: Response) => {
     res.json(post);
   } catch (error) {
     console.error(error);
-    res.status(401).json({ message: "Unauthorized" });
+    res.status(500).json({ message: "Internal Server Error" });
   }
+  return res.status(500).json({ message: "Internal Server Error" });
 });
 
 // Update
 postController.put("/:id", async (req: Request, res: Response) => {
   const { title, image, description } = req.body;
   const { id } = req.params;
-  const token = req.headers.authorization?.split(" ")[1];
+  const token = getCookie("accessToken");
 
   if (!token) {
-    throw new Error("Token is missing");
+    return res.status(401).json({ message: "Unauthorized" });
   }
 
   const secret = process.env.JWT_SECRET || "default-secret";
 
   try {
     const decodedToken = jwt.verify(token, secret) as { userId: string };
-    console.log("decodedToken:", decodedToken);
-
     const userId = decodedToken.userId.toString();
-    console.log("userId:", userId);
-
-    console.log("userId:", typeof userId, userId);
-    console.log(
-      "ADMIN_USER_ID:",
-      typeof process.env.ADMIN_USER_ID,
-      process.env.ADMIN_USER_ID
-    );
 
     // Check if user is an admin
     if (userId !== process.env.ADMIN_USER_ID) {
-      throw new Error("Unauthorized");
+      return res.status(401).json({ message: "Unauthorized" });
     }
-    console.log(
-      "userId === ADMIN_USER_ID:",
-      userId === process.env.ADMIN_USER_ID
-    );
-
-    console.log("userId:", typeof userId, userId);
-    console.log(
-      "ADMIN_USER_ID:",
-      typeof process.env.ADMIN_USER_ID,
-      process.env.ADMIN_USER_ID
-    );
 
     const { rows: postRows } = await pool.query<Post>(
       "SELECT * FROM posts WHERE id = $1",
@@ -130,11 +137,11 @@ postController.put("/:id", async (req: Request, res: Response) => {
     console.error(error);
     res.status(401).json({ message: "Unauthorized" });
   }
-  return res.status(500).json(new Error("Internal Server Error"));
+  return res.status(500).json({ message: "Internal Server Error" });
 });
 
 // Delete
-postController.delete("/:id", async (req, res) => {
+postController.delete("/:id", async (req: Request, res: Response) => {
   const { id } = req.params;
   const token = req.headers.authorization?.split(" ")[1];
 
@@ -188,6 +195,7 @@ postController.delete("/:id", async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json(error);
+    return;
   }
   return res.status(500).json(new Error("Internal Server Error"));
 });

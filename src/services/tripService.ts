@@ -5,26 +5,18 @@ const baseURL = "https://themeparktrekker.herokuapp.com/trips/";
 
 export const tripService = {
   getAll: async (): Promise<Trip[]> => {
-    const token = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("accessToken="))
-      ?.split("=")[1];
+    const token = getCookie("accessToken");
 
-    console.log(token); // Log the token to the console
     const response = await axios.get(baseURL, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
-    console.log(response);
     return response.data;
   },
 
   getOne: async (id: string): Promise<Trip> => {
-    const token = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("accessToken="))
-      ?.split("=")[1];
+    const token = getCookie("accessToken");
 
     const response = await axios.get(baseURL + id, {
       headers: {
@@ -35,10 +27,7 @@ export const tripService = {
   },
 
   create: async (trip: Trip): Promise<Trip> => {
-    const token = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("accessToken="))
-      ?.split("=")[1];
+    const token = getCookie("accessToken");
 
     const response = await axios.post(baseURL, trip, {
       headers: {
@@ -49,10 +38,7 @@ export const tripService = {
   },
 
   update: async (id: string, trip: Trip): Promise<Trip> => {
-    const token = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("accessToken="))
-      ?.split("=")[1];
+    const token = getCookie("accessToken");
 
     const response = await axios.put(baseURL + id, trip, {
       headers: {
@@ -63,10 +49,7 @@ export const tripService = {
   },
 
   delete: async (id: string): Promise<void> => {
-    const token = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("accessToken="))
-      ?.split("=")[1];
+    const token = getCookie("accessToken");
 
     await axios.delete(baseURL + id, {
       headers: {
@@ -75,3 +58,12 @@ export const tripService = {
     });
   },
 };
+
+function getCookie(name: string) {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) {
+    return parts.pop()?.split(";").shift();
+  }
+  return null;
+}

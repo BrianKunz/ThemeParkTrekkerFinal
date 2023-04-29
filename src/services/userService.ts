@@ -1,5 +1,6 @@
 import axios from "axios";
 import { User } from "../entities/User.entity";
+import Cookies from "cookie";
 
 const baseURL = "https://themeparktrekker.herokuapp.com/users/";
 
@@ -25,7 +26,9 @@ export const userService = {
     const userId = response.data.user.id;
 
     // Set the token in a cookie
-    document.cookie = `accessToken=${token}`;
+    const options = { httpOnly: true };
+    const cookies = Cookies.serialize("accessToken", token, options);
+    document.cookie = cookies;
 
     const config = {
       headers: {
@@ -39,20 +42,18 @@ export const userService = {
   },
 
   getCurrentUser: async () => {
-    const cookies = document.cookie.split("; ");
-    for (const cookie of cookies) {
-      const [name, value] = cookie.split("=");
-      if (name === "accessToken") {
-        // If the cookie exists, return the token
-        const token = decodeURIComponent(value);
-        const config = {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        };
-        axios.defaults.headers.common = config.headers;
-        return axios.get(`${baseURL}me`).then((response) => response.data);
-      }
+    const cookies = Cookies.parse(document.cookie);
+    const token = cookies["accessToken"];
+
+    if (token) {
+      // If the cookie exists, return the token
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      axios.defaults.headers.common = config.headers;
+      return axios.get(`${baseURL}me`).then((response) => response.data);
     }
 
     // If the cookie does not exist, return null
