@@ -50,15 +50,12 @@ userController.post("/login", (req, res) => tslib_1.__awaiter(void 0, void 0, vo
             return;
         }
         const isAdmin = user.admin === true;
-        const session = req.session;
-        if (session) {
-            session.userId = user.id;
-        }
         const secret = process.env.JWT_SECRET || "default-secret";
         const token = jsonwebtoken_1.default.sign({ userId: user.id }, secret);
+        res.cookie("accessToken", token, { httpOnly: true });
         const sessionID = req.sessionID;
         if (sessionID) {
-            res.json({ user: Object.assign(Object.assign({}, user), { isAdmin }), token, session_id: sessionID });
+            res.json({ user: Object.assign(Object.assign({}, user), { isAdmin }), session_id: sessionID });
         }
         else {
             res.status(500).json("sessionID is not defined");

@@ -4,9 +4,12 @@ const tslib_1 = require("tslib");
 const express_1 = tslib_1.__importDefault(require("express"));
 const database_1 = tslib_1.__importDefault(require("../../database"));
 const jsonwebtoken_1 = tslib_1.__importDefault(require("jsonwebtoken"));
-const node_localstorage_1 = require("node-localstorage");
 const postController = express_1.default.Router();
-const localStorage = new node_localstorage_1.LocalStorage("./scratch");
+function isAdmin(token) {
+    const decodedToken = jsonwebtoken_1.default.decode(token);
+    const userId = decodedToken.userId;
+    return userId === process.env.ADMIN_USER_ID;
+}
 postController.get("/", (_, res) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     try {
         const { rows } = yield database_1.default.query("SELECT * FROM posts");
@@ -17,34 +20,19 @@ postController.get("/", (_, res) => tslib_1.__awaiter(void 0, void 0, void 0, fu
         res.status(500).json({ message: "Internal Server Error" });
     }
 }));
-postController.get("/:id", (req, res) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-    const { id } = req.params;
-    try {
-        const { rows } = yield database_1.default.query("SELECT * FROM posts WHERE id = $1", [id]);
-        const post = rows[0];
-        if (!post) {
-            return res.status(404).json({ message: "Not Found" });
-        }
-        res.json(post);
-    }
-    catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Internal Server Error" });
-    }
-    return res.status(500).json({ message: "Unknown Error" });
-}));
 postController.post("/", (req, res) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     const { title, image, description } = req.body;
-    const token = localStorage.getItem("token");
+    const token = (_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(" ")[1];
     if (!token) {
-        throw new Error("No token found");
+        return res.status(401).json({ message: "Unauthorized" });
     }
     const secret = process.env.JWT_SECRET || "default-secret";
     try {
         const decodedToken = jsonwebtoken_1.default.verify(token, secret);
         const userId = decodedToken.userId.toString();
-        if (userId !== process.env.ADMIN_USER_ID) {
-            throw new Error("Unauthorized");
+        if (!isAdmin(token)) {
+            return res.status(401).json({ message: "Unauthorized" });
         }
         const { rows: postRows } = yield database_1.default.query("INSERT INTO posts (title, image, description, user_id) VALUES ($1, $2, $3, $4) RETURNING *", [title, image, description, userId]);
         const post = postRows[0];
@@ -54,12 +42,13 @@ postController.post("/", (req, res) => tslib_1.__awaiter(void 0, void 0, void 0,
         console.error(error);
         res.status(401).json({ message: "Unauthorized" });
     }
+    return res.status(500).json(new Error("Internal Server Error"));
 }));
 postController.put("/:id", (req, res) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-    var _a;
+    var _b;
     const { title, image, description } = req.body;
     const { id } = req.params;
-    const token = (_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(" ")[1];
+    const token = (_b = req.headers.authorization) === null || _b === void 0 ? void 0 : _b.split(" ")[1];
     if (!token) {
         throw new Error("Token is missing");
     }
@@ -92,9 +81,9 @@ postController.put("/:id", (req, res) => tslib_1.__awaiter(void 0, void 0, void 
     return res.status(500).json(new Error("Internal Server Error"));
 }));
 postController.delete("/:id", (req, res) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-    var _b;
+    var _c;
     const { id } = req.params;
-    const token = (_b = req.headers.authorization) === null || _b === void 0 ? void 0 : _b.split(" ")[1];
+    const token = (_c = req.headers.authorization) === null || _c === void 0 ? void 0 : _c.split(" ")[1];
     if (!token) {
         throw new Error("Token is missing");
     }

@@ -39,6 +39,7 @@ userController.post("/signup", async (req: Request, res: Response) => {
 });
 
 // Login user
+// Login user
 userController.post("/login", async (req, res) => {
   const { username, password } = req.body;
 
@@ -66,18 +67,16 @@ userController.post("/login", async (req, res) => {
     // Set isAdmin property
     const isAdmin = user.admin === true;
 
-    const session = (req as any).session;
-    if (session) {
-      session.userId = user.id;
-    }
-
     // Generate JWT token
     const secret = process.env.JWT_SECRET || "default-secret";
     const token = jwt.sign({ userId: user.id }, secret);
 
+    // Set cookie
+    res.cookie("accessToken", token, { httpOnly: true });
+
     const sessionID = (req as any).sessionID;
     if (sessionID) {
-      res.json({ user: { ...user, isAdmin }, token, session_id: sessionID });
+      res.json({ user: { ...user, isAdmin }, session_id: sessionID });
     } else {
       res.status(500).json("sessionID is not defined");
     }

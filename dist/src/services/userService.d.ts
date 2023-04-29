@@ -11,5 +11,5 @@ export declare const userService: {
             };
         };
     }>;
-    getCurrentUser: () => Promise<User | null>;
+    getCurrentUser: () => Promise<any>;
 };

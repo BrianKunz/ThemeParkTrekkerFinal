@@ -2,16 +2,14 @@ import express, { Request, Response } from "express";
 import { Post } from "../entities/Post.entity";
 import pool from "../../database";
 import jwt from "jsonwebtoken";
-import { LocalStorage } from "node-localstorage";
 
 const postController = express.Router();
-const localStorage = new LocalStorage("./scratch");
-// declare module "express-session" {
-//   interface Session {
-//     userId?: number;
-//     token?: string;
-//   }
-// }
+
+function isAdmin(token: string): boolean {
+  const decodedToken = jwt.decode(token) as { userId: string };
+  const userId = decodedToken.userId;
+  return userId === process.env.ADMIN_USER_ID;
+}
 
 // Index
 postController.get("/", async (_, res) => {
@@ -24,31 +22,12 @@ postController.get("/", async (_, res) => {
   }
 });
 // Show
-postController.get("/:id", async (req, res) => {
-  const { id } = req.params;
-
-  try {
-    const { rows } = await pool.query<Post>(
-      "SELECT * FROM posts WHERE id = $1",
-      [id]
-    );
-    const post = rows[0];
-    if (!post) {
-      return res.status(404).json({ message: "Not Found" });
-    }
-    res.json(post);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Internal Server Error" });
-  }
-  return res.status(500).json({ message: "Unknown Error" });
-});
-
 postController.post("/", async (req: Request, res: Response) => {
   const { title, image, description } = req.body;
-  const token = localStorage.getItem("token");
+
+  const token = req.headers.authorization?.split(" ")[1];
   if (!token) {
-    throw new Error("No token found");
+    return res.status(401).json({ message: "Unauthorized" });
   }
 
   const secret = process.env.JWT_SECRET || "default-secret";
@@ -58,8 +37,8 @@ postController.post("/", async (req: Request, res: Response) => {
     const userId = decodedToken.userId.toString();
 
     // Check if user is an admin
-    if (userId !== process.env.ADMIN_USER_ID) {
-      throw new Error("Unauthorized");
+    if (!isAdmin(token)) {
+      return res.status(401).json({ message: "Unauthorized" });
     }
 
     const { rows: postRows } = await pool.query<Post>(
@@ -73,6 +52,7 @@ postController.post("/", async (req: Request, res: Response) => {
     console.error(error);
     res.status(401).json({ message: "Unauthorized" });
   }
+  return res.status(500).json(new Error("Internal Server Error"));
 });
 
 // Update

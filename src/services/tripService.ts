@@ -1,14 +1,15 @@
 import axios from "axios";
 import { Trip } from "../entities/Trip.entity";
-import { LocalStorage } from "node-localstorage";
-
-const localStorage = new LocalStorage("./scratch");
 
 const baseURL = "https://themeparktrekker.herokuapp.com/trips/";
 
 export const tripService = {
   getAll: async (): Promise<Trip[]> => {
-    const token = localStorage.getItem("accessToken");
+    const token = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("accessToken="))
+      ?.split("=")[1];
+
     console.log(token); // Log the token to the console
     const response = await axios.get(baseURL, {
       headers: {
@@ -20,7 +21,11 @@ export const tripService = {
   },
 
   getOne: async (id: string): Promise<Trip> => {
-    const token = localStorage.getItem("accessToken");
+    const token = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("accessToken="))
+      ?.split("=")[1];
+
     const response = await axios.get(baseURL + id, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -30,7 +35,11 @@ export const tripService = {
   },
 
   create: async (trip: Trip): Promise<Trip> => {
-    const token = localStorage.getItem("accessToken");
+    const token = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("accessToken="))
+      ?.split("=")[1];
+
     const response = await axios.post(baseURL, trip, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -40,7 +49,11 @@ export const tripService = {
   },
 
   update: async (id: string, trip: Trip): Promise<Trip> => {
-    const token = localStorage.getItem("accessToken");
+    const token = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("accessToken="))
+      ?.split("=")[1];
+
     const response = await axios.put(baseURL + id, trip, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -50,7 +63,11 @@ export const tripService = {
   },
 
   delete: async (id: string): Promise<void> => {
-    const token = localStorage.getItem("accessToken");
+    const token = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("accessToken="))
+      ?.split("=")[1];
+
     await axios.delete(baseURL + id, {
       headers: {
         Authorization: `Bearer ${token}`,
