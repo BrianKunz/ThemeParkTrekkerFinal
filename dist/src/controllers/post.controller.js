@@ -63,20 +63,11 @@ postController.put("/:id", (req, res) => tslib_1.__awaiter(void 0, void 0, void 
     if (!token) {
         throw new Error("Token is missing");
     }
-    const secret = process.env.JWT_SECRET || "default-secret";
     try {
-        const decodedToken = jsonwebtoken_1.default.verify(token, secret);
-        console.log("decodedToken:", decodedToken);
-        const userId = decodedToken.userId.toString();
-        console.log("userId:", userId);
-        console.log("userId:", typeof userId, userId);
-        console.log("ADMIN_USER_ID:", typeof process.env.ADMIN_USER_ID, process.env.ADMIN_USER_ID);
-        if (userId !== process.env.ADMIN_USER_ID) {
+        const userId = sessionStorage.getItem("userId");
+        if (!userId || userId !== process.env.ADMIN_USER_ID) {
             throw new Error("Unauthorized");
         }
-        console.log("userId === ADMIN_USER_ID:", userId === process.env.ADMIN_USER_ID);
-        console.log("userId:", typeof userId, userId);
-        console.log("ADMIN_USER_ID:", typeof process.env.ADMIN_USER_ID, process.env.ADMIN_USER_ID);
         const { rows: postRows } = yield database_1.default.query("SELECT * FROM posts WHERE id = $1", [id]);
         const post = postRows[0];
         if (!post) {

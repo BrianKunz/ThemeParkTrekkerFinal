@@ -33,21 +33,19 @@ app.use(
     secret: secret,
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: false }, // set to false if not using HTTPS
+    cookie: { secure: true },
   })
 );
+app.use(express.static("./"));
 
-// serve static files
-app.use(express.static(path.join(__dirname, "..", "..", "public")));
+app.get("/*", (_, res) => {
+  res.sendFile(path.join(__dirname, "..", "..", "public", "index.html"));
+});
 
 app.use("/users", userController);
 app.use("/posts", postController);
 app.use("/trips", tripController);
 app.use("/comments", commentController);
-
-app.get("*", (_, res) => {
-  res.sendFile(path.join(__dirname, "..", "..", "public", "index.html"));
-});
 
 app.listen(PORT, () => {
   console.log(`Server is starting 🚀 on PORT: ${PORT}`);
