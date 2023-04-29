@@ -78,6 +78,10 @@ postController.post("/", authorize, async (req: AuthRequest, res: Response) => {
   const { title, image, description } = req.body;
   const userId = req.user?.id;
 
+  console.log("title:", title);
+  console.log("image:", image);
+  console.log("description:", description);
+
   if (!userId) {
     return res.status(401).json({ message: "Unauthorized" });
   }

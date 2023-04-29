@@ -61,6 +61,9 @@ postController.post("/", authorize, (req, res) => tslib_1.__awaiter(void 0, void
     var _b;
     const { title, image, description } = req.body;
     const userId = (_b = req.user) === null || _b === void 0 ? void 0 : _b.id;
+    console.log("title:", title);
+    console.log("image:", image);
+    console.log("description:", description);
     if (!userId) {
         return res.status(401).json({ message: "Unauthorized" });
     }
