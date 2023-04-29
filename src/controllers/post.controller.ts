@@ -2,7 +2,6 @@ import express, { Request, Response } from "express";
 import { Post } from "../entities/Post.entity";
 import pool from "../../database";
 import jwt from "jsonwebtoken";
-import { useUserStore } from "../stores/useUserStore";
 
 const postController = express.Router();
 
@@ -46,17 +45,9 @@ postController.get("/:id", async (req, res) => {
 
 postController.post("/", async (req: Request, res: Response) => {
   const { title, image, description } = req.body;
-  const config = useUserStore.getState().currentUser.config;
-  const token =
-    config && config.headers && config.headers.Authorization.split(" ")[1];
-
-  console.log("token:", token);
-  console.log("config: ", config);
-  console.log("header:", req.headers);
-
-  if (!Boolean(token)) {
-    // Check if token is truthy
-    throw new Error("Unauthorized");
+  const token = sessionStorage.getItem("token");
+  if (!token) {
+    throw new Error("No token found");
   }
 
   const secret = process.env.JWT_SECRET || "default-secret";

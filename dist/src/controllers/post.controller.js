@@ -4,7 +4,6 @@ const tslib_1 = require("tslib");
 const express_1 = tslib_1.__importDefault(require("express"));
 const database_1 = tslib_1.__importDefault(require("../../database"));
 const jsonwebtoken_1 = tslib_1.__importDefault(require("jsonwebtoken"));
-const useUserStore_1 = require("../stores/useUserStore");
 const postController = express_1.default.Router();
 postController.get("/", (_, res) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -34,13 +33,9 @@ postController.get("/:id", (req, res) => tslib_1.__awaiter(void 0, void 0, void 
 }));
 postController.post("/", (req, res) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     const { title, image, description } = req.body;
-    const config = useUserStore_1.useUserStore.getState().currentUser.config;
-    const token = config && config.headers && config.headers.Authorization.split(" ")[1];
-    console.log("token:", token);
-    console.log("config: ", config);
-    console.log("header:", req.headers);
-    if (!Boolean(token)) {
-        throw new Error("Unauthorized");
+    const token = sessionStorage.getItem("token");
+    if (!token) {
+        throw new Error("No token found");
     }
     const secret = process.env.JWT_SECRET || "default-secret";
     try {
