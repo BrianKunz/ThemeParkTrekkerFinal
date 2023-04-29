@@ -64,7 +64,10 @@ tripController.get("/", authorize, async (req: AuthRequest, res: Response) => {
     res.json(rows);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Internal Server Error" });
+    if (!res.headersSent) {
+      // check if headers have been sent
+      res.status(500).json({ message: "Internal Server Error" });
+    }
   }
 });
 

@@ -43,7 +43,9 @@ tripController.get("/", authorize, (req, res) => tslib_1.__awaiter(void 0, void 
     }
     catch (error) {
         console.error(error);
-        res.status(500).json({ message: "Internal Server Error" });
+        if (!res.headersSent) {
+            res.status(500).json({ message: "Internal Server Error" });
+        }
     }
 }));
 tripController.get("/:id", authorize, (req, res) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
