@@ -33,22 +33,20 @@ app.use(
     secret: secret,
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: true },
+    cookie: { secure: false }, // set to false if not using HTTPS
   })
 );
-app.use(express.static("./"));
 
-app.get("/*", (_, res) => {
-  res.sendFile(path.join(__dirname, "..", "..", "public", "index.html"));
-});
+// serve static files
+app.use(express.static(path.join(__dirname, "..", "..", "public")));
 
 app.use("/users", userController);
 app.use("/posts", postController);
 app.use("/trips", tripController);
 app.use("/comments", commentController);
 
-app.get("/", (_, res) => {
-  res.redirect("/posts");
+app.get("*", (_, res) => {
+  res.sendFile(path.join(__dirname, "..", "..", "public", "index.html"));
 });
 
 app.listen(PORT, () => {

@@ -28,17 +28,14 @@ app.use(session({
     secret: secret,
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: true },
+    cookie: { secure: false },
 }));
+app.use(express_1.default.static(path_1.default.join(__dirname, "..", "..", "public")));
 app.use("/users", user_controller_1.default);
 app.use("/posts", post_controller_1.default);
 app.use("/trips", trip_controller_1.default);
 app.use("/comments", comment_controller_1.default);
-app.get("/", (_, res) => {
-    res.redirect("/posts");
-});
-app.use(express_1.default.static("./"));
-app.get("/*", (_, res) => {
+app.get("*", (_, res) => {
     res.sendFile(path_1.default.join(__dirname, "..", "..", "public", "index.html"));
 });
 app.listen(PORT, () => {
