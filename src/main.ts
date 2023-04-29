@@ -22,8 +22,7 @@ app.get("/favicon.ico", (_, res) => {
   res.status(204).end();
 });
 
-app.use(express.static(path.join(__dirname, "dist")));
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static("./"));
 
 app.get("*", (_, res) => {
   res.sendFile(path.join(__dirname, "..", "..", "public", "index.html"));

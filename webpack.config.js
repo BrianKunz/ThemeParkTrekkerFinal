@@ -9,7 +9,6 @@ module.exports = {
 
   // Output configuration
   output: {
-    publicPath: "/",
     path: path.resolve(__dirname, "dist"),
     filename: "bundle.js",
   },
@@ -38,6 +37,7 @@ module.exports = {
 
   plugins: [
     new HtmlWebpackPlugin({
+      publicPath: "/",
       template: "./public/index.html",
       inject: false,
     }),
