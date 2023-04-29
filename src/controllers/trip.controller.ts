@@ -16,12 +16,11 @@ const authorize = async (
   res: Response,
   next: NextFunction
 ) => {
-  const { authorization } = req.headers;
-  if (!authorization || !authorization.startsWith("Bearer ")) {
+  const token = req.cookies.accessToken;
+  if (!token) {
     return res.status(401).json({ message: "Unauthorized" });
   }
 
-  const token = authorization.split(" ")[1];
   const secret = process.env.JWT_SECRET || "default-secret";
 
   try {
@@ -50,7 +49,7 @@ const authorize = async (
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
   }
-  return res.status(401).json({ message: "Unauthorized" });
+  return res.status(500).json({ message: "Internal Server Error" });
 };
 
 // Index

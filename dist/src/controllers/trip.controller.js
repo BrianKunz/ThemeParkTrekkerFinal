@@ -6,11 +6,10 @@ const database_1 = tslib_1.__importDefault(require("../../database"));
 const jsonwebtoken_1 = tslib_1.__importDefault(require("jsonwebtoken"));
 const tripController = express_1.default.Router();
 const authorize = (req, res, next) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-    const { authorization } = req.headers;
-    if (!authorization || !authorization.startsWith("Bearer ")) {
+    const token = req.cookies.accessToken;
+    if (!token) {
         return res.status(401).json({ message: "Unauthorized" });
     }
-    const token = authorization.split(" ")[1];
     const secret = process.env.JWT_SECRET || "default-secret";
     try {
         const decodedToken = jsonwebtoken_1.default.verify(token, secret);
@@ -32,7 +31,7 @@ const authorize = (req, res, next) => tslib_1.__awaiter(void 0, void 0, void 0, 
         console.error(error);
         res.status(500).json({ message: "Internal Server Error" });
     }
-    return res.status(401).json({ message: "Unauthorized" });
+    return res.status(500).json({ message: "Internal Server Error" });
 });
 tripController.get("/", authorize, (req, res) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     var _a;

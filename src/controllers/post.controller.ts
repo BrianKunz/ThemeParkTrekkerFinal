@@ -5,11 +5,11 @@ import jwt from "jsonwebtoken";
 
 const postController = express.Router();
 
-function isAdmin(token: string): boolean {
-  const decodedToken = jwt.decode(token) as { userId: string };
-  const userId = decodedToken.userId;
-  return userId === process.env.ADMIN_USER_ID;
-}
+// function isAdmin(token: string): boolean {
+//   const decodedToken = jwt.decode(token) as { userId: string };
+//   const userId = decodedToken.userId;
+//   return userId === process.env.ADMIN_USER_ID;
+// }
 
 // Index
 postController.get("/", async (_, res) => {
@@ -21,13 +21,33 @@ postController.get("/", async (_, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 });
-// Show
+
+// Show One
+postController.get("/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const { rows } = await pool.query<Post>(
+      "SELECT * FROM posts WHERE id = $1",
+      [id]
+    );
+    if (!rows.length) {
+      return res.status(404).json({ message: "Not Found" });
+    }
+    res.json(rows[0]);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+  return res.status(500).json({ message: "Internal Server Error" });
+});
+
+// Post
 postController.post("/", async (req: Request, res: Response) => {
   const { title, image, description } = req.body;
-
-  const token = req.headers.authorization?.split(" ")[1];
+  const token = localStorage.getItem("accessToken");
   if (!token) {
-    return res.status(401).json({ message: "Unauthorized" });
+    res.status(401).json({ message: "Unauthorized" });
+    return;
   }
 
   const secret = process.env.JWT_SECRET || "default-secret";
@@ -35,11 +55,6 @@ postController.post("/", async (req: Request, res: Response) => {
   try {
     const decodedToken = jwt.verify(token, secret) as { userId: string };
     const userId = decodedToken.userId.toString();
-
-    // Check if user is an admin
-    if (!isAdmin(token)) {
-      return res.status(401).json({ message: "Unauthorized" });
-    }
 
     const { rows: postRows } = await pool.query<Post>(
       "INSERT INTO posts (title, image, description, user_id) VALUES ($1, $2, $3, $4) RETURNING *",
@@ -52,7 +67,6 @@ postController.post("/", async (req: Request, res: Response) => {
     console.error(error);
     res.status(401).json({ message: "Unauthorized" });
   }
-  return res.status(500).json(new Error("Internal Server Error"));
 });
 
 // Update
