@@ -2,9 +2,10 @@ import express, { Request, Response } from "express";
 import { Post } from "../entities/Post.entity";
 import pool from "../../database";
 import jwt from "jsonwebtoken";
+import { LocalStorage } from "node-localstorage";
 
 const postController = express.Router();
-
+const localStorage = new LocalStorage("./scratch");
 // declare module "express-session" {
 //   interface Session {
 //     userId?: number;

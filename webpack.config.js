@@ -20,6 +20,13 @@ module.exports = {
   // Resolve file extensions
   resolve: {
     extensions: [".ts", ".tsx", ".js", ".jsx"],
+    fallback: {
+      fs: false,
+      util: require.resolve("util/"),
+      constants: require.resolve("constants-browserify"),
+      path: require.resolve("path-browserify"),
+      stream: require.resolve("stream-browserify"),
+    },
   },
 
   module: {

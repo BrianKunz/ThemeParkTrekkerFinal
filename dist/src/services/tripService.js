@@ -3,6 +3,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.tripService = void 0;
 const tslib_1 = require("tslib");
 const axios_1 = tslib_1.__importDefault(require("axios"));
+const node_localstorage_1 = require("node-localstorage");
+const localStorage = new node_localstorage_1.LocalStorage("./scratch");
 const baseURL = "https://themeparktrekker.herokuapp.com/trips/";
 exports.tripService = {
     getAll: () => tslib_1.__awaiter(void 0, void 0, void 0, function* () {

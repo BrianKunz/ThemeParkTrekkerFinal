@@ -4,7 +4,9 @@ const tslib_1 = require("tslib");
 const express_1 = tslib_1.__importDefault(require("express"));
 const database_1 = tslib_1.__importDefault(require("../../database"));
 const jsonwebtoken_1 = tslib_1.__importDefault(require("jsonwebtoken"));
+const node_localstorage_1 = require("node-localstorage");
 const postController = express_1.default.Router();
+const localStorage = new node_localstorage_1.LocalStorage("./scratch");
 postController.get("/", (_, res) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     try {
         const { rows } = yield database_1.default.query("SELECT * FROM posts");

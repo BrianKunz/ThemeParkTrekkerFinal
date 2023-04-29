@@ -1,7 +1,9 @@
 import axios from "axios";
 import { User } from "../entities/User.entity";
+import { LocalStorage } from "node-localstorage";
 
 const baseURL = "https://themeparktrekker.herokuapp.com/users/";
+const localStorage = new LocalStorage("./scratch");
 
 export const userService = {
   getAll: async (): Promise<User[]> => {

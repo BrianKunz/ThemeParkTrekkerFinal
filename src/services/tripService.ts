@@ -1,5 +1,8 @@
 import axios from "axios";
 import { Trip } from "../entities/Trip.entity";
+import { LocalStorage } from "node-localstorage";
+
+const localStorage = new LocalStorage("./scratch");
 
 const baseURL = "https://themeparktrekker.herokuapp.com/trips/";
 
