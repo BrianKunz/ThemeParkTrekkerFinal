@@ -11,7 +11,6 @@ const trip_controller_1 = tslib_1.__importDefault(require("./controllers/trip.co
 const comment_controller_1 = tslib_1.__importDefault(require("./controllers/comment.controller"));
 const morgan_1 = tslib_1.__importDefault(require("morgan"));
 const cors_1 = tslib_1.__importDefault(require("cors"));
-const cookie_parser_1 = tslib_1.__importDefault(require("cookie-parser"));
 const session = require("express-session");
 const secret = process.env.SESSION_SECRET || "default-secret";
 const PORT = process.env.PORT || 3000;
@@ -22,7 +21,6 @@ const corsOptions = {
     origin: "*",
 };
 app.use((0, cors_1.default)(corsOptions));
-app.use((0, cookie_parser_1.default)());
 app.get("/favicon.ico", (_, res) => {
     res.status(204).end();
 });

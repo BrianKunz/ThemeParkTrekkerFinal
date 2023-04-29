@@ -8,7 +8,6 @@ import tripController from "./controllers/trip.controller";
 import commentController from "./controllers/comment.controller";
 import morgan from "morgan";
 import cors from "cors";
-import cookieParser from "cookie-parser";
 const session = require("express-session");
 const secret = process.env.SESSION_SECRET || "default-secret";
 
@@ -24,8 +23,6 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-
-app.use(cookieParser());
 
 app.get("/favicon.ico", (_, res) => {
   res.status(204).end();
