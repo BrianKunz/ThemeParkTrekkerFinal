@@ -45,7 +45,7 @@ postController.get("/:id", async (req, res) => {
 
 postController.post("/", async (req: Request, res: Response) => {
   const { title, image, description } = req.body;
-  const token = sessionStorage.getItem("token");
+  const token = localStorage.getItem("token");
   if (!token) {
     throw new Error("No token found");
   }

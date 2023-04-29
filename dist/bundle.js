@@ -53020,7 +53020,7 @@ exports.postService = {
         return response.data;
     }),
     create: (post) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-        const token = sessionStorage.getItem("accessToken");
+        const token = localStorage.getItem("accessToken");
         const config = {
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -53055,7 +53055,7 @@ const axios_1 = tslib_1.__importDefault(__webpack_require__(/*! axios */ "./node
 const baseURL = "https://themeparktrekker.herokuapp.com/trips/";
 exports.tripService = {
     getAll: () => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-        const token = sessionStorage.getItem("accessToken");
+        const token = localStorage.getItem("accessToken");
         console.log(token);
         const response = yield axios_1.default.get(baseURL, {
             headers: {
@@ -53066,7 +53066,7 @@ exports.tripService = {
         return response.data;
     }),
     getOne: (id) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-        const token = sessionStorage.getItem("accessToken");
+        const token = localStorage.getItem("accessToken");
         const response = yield axios_1.default.get(baseURL + id, {
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -53075,7 +53075,7 @@ exports.tripService = {
         return response.data;
     }),
     create: (trip) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-        const token = sessionStorage.getItem("accessToken");
+        const token = localStorage.getItem("accessToken");
         const response = yield axios_1.default.post(baseURL, trip, {
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -53084,7 +53084,7 @@ exports.tripService = {
         return response.data;
     }),
     update: (id, trip) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-        const token = sessionStorage.getItem("accessToken");
+        const token = localStorage.getItem("accessToken");
         const response = yield axios_1.default.put(baseURL + id, trip, {
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -53093,7 +53093,7 @@ exports.tripService = {
         return response.data;
     }),
     delete: (id) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-        const token = sessionStorage.getItem("accessToken");
+        const token = localStorage.getItem("accessToken");
         yield axios_1.default.delete(baseURL + id, {
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -53131,8 +53131,8 @@ exports.userService = {
         const response = yield axios_1.default.post(`${baseURL}login`, user);
         const token = response.data.token;
         const userId = response.data.user.id;
-        sessionStorage.setItem("accessToken", token);
-        sessionStorage.setItem("userId", userId);
+        localStorage.setItem("accessToken", token);
+        localStorage.setItem("userId", userId);
         const config = {
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -53142,7 +53142,7 @@ exports.userService = {
         return { response: response.data, userId, config: config };
     }),
     getCurrentUser: () => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-        const userString = sessionStorage.getItem("user");
+        const userString = localStorage.getItem("user");
         if (userString) {
             const user = JSON.parse(userString);
             return user;

@@ -14,7 +14,7 @@ exports.postService = {
         return response.data;
     }),
     create: (post) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-        const token = sessionStorage.getItem("accessToken");
+        const token = localStorage.getItem("accessToken");
         const config = {
             headers: {
                 Authorization: `Bearer ${token}`,

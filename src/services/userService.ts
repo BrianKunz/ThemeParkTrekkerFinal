@@ -23,8 +23,8 @@ export const userService = {
     const response = await axios.post(`${baseURL}login`, user);
     const token = response.data.token;
     const userId = response.data.user.id;
-    sessionStorage.setItem("accessToken", token);
-    sessionStorage.setItem("userId", userId);
+    localStorage.setItem("accessToken", token);
+    localStorage.setItem("userId", userId);
 
     const config = {
       headers: {
@@ -38,7 +38,7 @@ export const userService = {
   },
 
   getCurrentUser: async () => {
-    const userString = sessionStorage.getItem("user");
+    const userString = localStorage.getItem("user");
     if (userString) {
       const user = JSON.parse(userString);
       return user as User;

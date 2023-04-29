@@ -33,7 +33,7 @@ postController.get("/:id", (req, res) => tslib_1.__awaiter(void 0, void 0, void 
 }));
 postController.post("/", (req, res) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     const { title, image, description } = req.body;
-    const token = sessionStorage.getItem("token");
+    const token = localStorage.getItem("token");
     if (!token) {
         throw new Error("No token found");
     }

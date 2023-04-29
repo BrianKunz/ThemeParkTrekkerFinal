@@ -6,7 +6,7 @@ const axios_1 = tslib_1.__importDefault(require("axios"));
 const baseURL = "https://themeparktrekker.herokuapp.com/trips/";
 exports.tripService = {
     getAll: () => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-        const token = sessionStorage.getItem("accessToken");
+        const token = localStorage.getItem("accessToken");
         console.log(token);
         const response = yield axios_1.default.get(baseURL, {
             headers: {
@@ -17,7 +17,7 @@ exports.tripService = {
         return response.data;
     }),
     getOne: (id) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-        const token = sessionStorage.getItem("accessToken");
+        const token = localStorage.getItem("accessToken");
         const response = yield axios_1.default.get(baseURL + id, {
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -26,7 +26,7 @@ exports.tripService = {
         return response.data;
     }),
     create: (trip) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-        const token = sessionStorage.getItem("accessToken");
+        const token = localStorage.getItem("accessToken");
         const response = yield axios_1.default.post(baseURL, trip, {
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -35,7 +35,7 @@ exports.tripService = {
         return response.data;
     }),
     update: (id, trip) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-        const token = sessionStorage.getItem("accessToken");
+        const token = localStorage.getItem("accessToken");
         const response = yield axios_1.default.put(baseURL + id, trip, {
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -44,7 +44,7 @@ exports.tripService = {
         return response.data;
     }),
     delete: (id) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-        const token = sessionStorage.getItem("accessToken");
+        const token = localStorage.getItem("accessToken");
         yield axios_1.default.delete(baseURL + id, {
             headers: {
                 Authorization: `Bearer ${token}`,

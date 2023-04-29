@@ -15,7 +15,7 @@ export const postService = {
   },
 
   create: async (post: Post): Promise<Post> => {
-    const token = sessionStorage.getItem("accessToken");
+    const token = localStorage.getItem("accessToken");
     const config = {
       headers: {
         Authorization: `Bearer ${token}`,
