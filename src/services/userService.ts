@@ -13,7 +13,12 @@ export const userService = {
     console.log(response.data);
     return response.data;
   },
-  login: async (user: User): Promise<User> => {
+  login: async (
+    user: User
+  ): Promise<{
+    response: User;
+    config: { headers: { Authorization: string } };
+  }> => {
     const response = await axios.post(`${baseURL}login`, user);
     const token = response.data.token;
     const userId = response.data.user.id;
@@ -26,13 +31,9 @@ export const userService = {
       },
     };
 
-    console.log(config);
-
     axios.defaults.headers.common = config.headers;
 
-    console.log(config.headers);
-
-    return response.data;
+    return { response: response.data, config: config };
   },
 
   getCurrentUser: async () => {

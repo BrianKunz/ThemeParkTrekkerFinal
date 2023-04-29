@@ -19,10 +19,8 @@ exports.useUserStore = (0, zustand_1.create)(() => ({
     }),
     login: (user) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
         try {
-            console.log(user);
-            const loggedInUser = yield userService_1.userService.login(user);
-            console.log(loggedInUser);
-            exports.useUserStore.setState({ currentUser: loggedInUser });
+            const { response } = yield userService_1.userService.login(user);
+            exports.useUserStore.setState({ currentUser: response });
         }
         catch (error) {
             console.error(error);

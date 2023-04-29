@@ -25,10 +25,8 @@ exports.userService = {
                 Authorization: `Bearer ${token}`,
             },
         };
-        console.log(config);
         axios_1.default.defaults.headers.common = config.headers;
-        console.log(config.headers);
-        return response.data;
+        return { response: response.data, config: config };
     }),
     getCurrentUser: () => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
         const userString = sessionStorage.getItem("user");

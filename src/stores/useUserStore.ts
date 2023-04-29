@@ -23,10 +23,8 @@ export const useUserStore = create<UserStore>(() => ({
   },
   login: async (user) => {
     try {
-      console.log(user);
-      const loggedInUser = await userService.login(user);
-      console.log(loggedInUser);
-      useUserStore.setState({ currentUser: loggedInUser });
+      const { response } = await userService.login(user);
+      useUserStore.setState({ currentUser: response });
     } catch (error) {
       console.error(error);
     }
