@@ -10,6 +10,7 @@ postController.get("/", (_, res) => tslib_1.__awaiter(void 0, void 0, void 0, fu
     try {
         const { rows } = yield database_1.default.query("SELECT * FROM posts");
         res.json(rows);
+        console.log(rows);
     }
     catch (error) {
         console.error(error);

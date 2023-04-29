@@ -38,15 +38,14 @@ app.use(
 );
 app.use(express.static("./"));
 
-app.get("/*", (_, res) => {
-  res.sendFile(path.join(__dirname, "..", "..", "public", "index.html"));
-});
-
 app.use("/users", userController);
 app.use("/posts", postController);
 app.use("/trips", tripController);
 app.use("/comments", commentController);
 
+app.get("/*", (_, res) => {
+  res.sendFile(path.join(__dirname, "..", "..", "public", "index.html"));
+});
 app.listen(PORT, () => {
   console.log(`Server is starting 🚀 on PORT: ${PORT}`);
 });
