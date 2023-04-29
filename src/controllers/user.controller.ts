@@ -77,8 +77,7 @@ userController.post("/login", async (req, res) => {
 
     const sessionID = (req as any).sessionID;
     if (sessionID) {
-      sessionStorage.setItem("accessToken", token);
-      res.json({ user: { ...user, isAdmin }, session_id: sessionID });
+      res.json({ user: { ...user, isAdmin }, token, session_id: sessionID });
     } else {
       res.status(500).json("sessionID is not defined");
     }
