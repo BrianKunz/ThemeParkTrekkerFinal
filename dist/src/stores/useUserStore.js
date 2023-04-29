@@ -6,7 +6,10 @@ const zustand_1 = require("zustand");
 const userService_1 = require("../services/userService");
 exports.useUserStore = (0, zustand_1.create)(() => ({
     users: [],
-    currentUser: null,
+    currentUser: {
+        response: null,
+        config: {},
+    },
     createNewUser: (user) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
         try {
             console.log(user);
@@ -19,8 +22,8 @@ exports.useUserStore = (0, zustand_1.create)(() => ({
     }),
     login: (user) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
         try {
-            const { response } = yield userService_1.userService.login(user);
-            exports.useUserStore.setState({ currentUser: response });
+            const { response, config } = yield userService_1.userService.login(user);
+            exports.useUserStore.setState({ currentUser: { response, config } });
         }
         catch (error) {
             console.error(error);

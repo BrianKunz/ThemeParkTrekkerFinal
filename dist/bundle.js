@@ -52438,6 +52438,11 @@ function useCreatePost() {
         try {
             setLoadingPosts(true);
             const postId = (0, uuid_1.v4)();
+            if (!currentUser ||
+                !currentUser.response ||
+                !currentUser.response.username) {
+                throw new Error("Cannot create post without a valid user");
+            }
             yield createNewPost({
                 id: postId,
                 created: postFormInputs.created,
@@ -52445,7 +52450,7 @@ function useCreatePost() {
                 image: postFormInputs.image,
                 description: postFormInputs.description,
                 comments: [],
-                user: currentUser,
+                user: currentUser.response,
             });
             setPostFormInputs({
                 created: new Date(),
@@ -53311,7 +53316,10 @@ const zustand_1 = __webpack_require__(/*! zustand */ "./node_modules/zustand/esm
 const userService_1 = __webpack_require__(/*! ../services/userService */ "./src/services/userService.ts");
 exports.useUserStore = (0, zustand_1.create)(() => ({
     users: [],
-    currentUser: null,
+    currentUser: {
+        response: null,
+        config: {},
+    },
     createNewUser: (user) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
         try {
             console.log(user);
@@ -53324,8 +53332,8 @@ exports.useUserStore = (0, zustand_1.create)(() => ({
     }),
     login: (user) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
         try {
-            const { response } = yield userService_1.userService.login(user);
-            exports.useUserStore.setState({ currentUser: response });
+            const { response, config } = yield userService_1.userService.login(user);
+            exports.useUserStore.setState({ currentUser: { response, config } });
         }
         catch (error) {
             console.error(error);

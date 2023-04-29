@@ -806,6 +806,7 @@ body {
   font-family: sans-serif;
   margin: 0;
   padding: 0;
+  background: linear-gradient(to bottom right, #98c1d9, #e0aaff);
 }
 
 .hover\:bg-blue-600:hover {

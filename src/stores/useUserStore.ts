@@ -1,17 +1,30 @@
 import { create } from "zustand";
 import { userService } from "../services/userService";
-import { User } from "../entities/User.entity";
 
 interface UserStore {
   users: User[];
-  currentUser: User | null;
+  currentUser: {
+    response: User | null;
+    config: any;
+  };
   createNewUser: (user: User) => Promise<void>;
   login: (user: User) => Promise<void>;
 }
 
+interface User {
+  id?: string;
+  username: string;
+  email?: string;
+  password?: string;
+  admin?: boolean;
+}
+
 export const useUserStore = create<UserStore>(() => ({
   users: [],
-  currentUser: null,
+  currentUser: {
+    response: null,
+    config: {},
+  },
   createNewUser: async (user) => {
     try {
       console.log(user);
@@ -23,8 +36,8 @@ export const useUserStore = create<UserStore>(() => ({
   },
   login: async (user) => {
     try {
-      const { response } = await userService.login(user);
-      useUserStore.setState({ currentUser: response });
+      const { response, config } = await userService.login(user);
+      useUserStore.setState({ currentUser: { response, config } });
     } catch (error) {
       console.error(error);
     }

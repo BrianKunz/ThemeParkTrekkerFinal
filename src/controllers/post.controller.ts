@@ -2,6 +2,7 @@ import express, { Request, Response } from "express";
 import { Post } from "../entities/Post.entity";
 import pool from "../../database";
 import jwt from "jsonwebtoken";
+import { useUserStore } from "../stores/useUserStore";
 
 const postController = express.Router();
 
@@ -49,7 +50,8 @@ postController.get("/:id", async (req, res) => {
 // Create
 postController.post("/", async (req: Request, res: Response) => {
   const { title, image, description } = req.body;
-  const token = req.headers.authorization?.split(" ")[1];
+  const config = useUserStore.getState().currentUser.config;
+  const token = config.headers.Authorization.split(" ")[1];
   console.log("token:", token);
   console.log(req.headers);
 

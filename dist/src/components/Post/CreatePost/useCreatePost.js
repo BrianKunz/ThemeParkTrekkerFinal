@@ -27,6 +27,11 @@ function useCreatePost() {
         try {
             setLoadingPosts(true);
             const postId = (0, uuid_1.v4)();
+            if (!currentUser ||
+                !currentUser.response ||
+                !currentUser.response.username) {
+                throw new Error("Cannot create post without a valid user");
+            }
             yield createNewPost({
                 id: postId,
                 created: postFormInputs.created,
@@ -34,7 +39,7 @@ function useCreatePost() {
                 image: postFormInputs.image,
                 description: postFormInputs.description,
                 comments: [],
-                user: currentUser,
+                user: currentUser.response,
             });
             setPostFormInputs({
                 created: new Date(),

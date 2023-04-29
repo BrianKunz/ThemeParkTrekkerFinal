@@ -4,6 +4,7 @@ const tslib_1 = require("tslib");
 const express_1 = tslib_1.__importDefault(require("express"));
 const database_1 = tslib_1.__importDefault(require("../../database"));
 const jsonwebtoken_1 = tslib_1.__importDefault(require("jsonwebtoken"));
+const useUserStore_1 = require("../stores/useUserStore");
 const postController = express_1.default.Router();
 postController.get("/", (req, res) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -34,9 +35,9 @@ postController.get("/:id", (req, res) => tslib_1.__awaiter(void 0, void 0, void 
     return res.status(500).json({ message: "Unknown Error" });
 }));
 postController.post("/", (req, res) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-    var _a;
     const { title, image, description } = req.body;
-    const token = (_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(" ")[1];
+    const config = useUserStore_1.useUserStore.getState().currentUser.config;
+    const token = config.headers.Authorization.split(" ")[1];
     console.log("token:", token);
     console.log(req.headers);
     if (!token) {
@@ -59,10 +60,10 @@ postController.post("/", (req, res) => tslib_1.__awaiter(void 0, void 0, void 0,
     }
 }));
 postController.put("/:id", (req, res) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-    var _b;
+    var _a;
     const { title, image, description } = req.body;
     const { id } = req.params;
-    const token = (_b = req.headers.authorization) === null || _b === void 0 ? void 0 : _b.split(" ")[1];
+    const token = (_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(" ")[1];
     if (!token) {
         throw new Error("Token is missing");
     }
@@ -95,9 +96,9 @@ postController.put("/:id", (req, res) => tslib_1.__awaiter(void 0, void 0, void 
     return res.status(500).json(new Error("Internal Server Error"));
 }));
 postController.delete("/:id", (req, res) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-    var _c;
+    var _b;
     const { id } = req.params;
-    const token = (_c = req.headers.authorization) === null || _c === void 0 ? void 0 : _c.split(" ")[1];
+    const token = (_b = req.headers.authorization) === null || _b === void 0 ? void 0 : _b.split(" ")[1];
     if (!token) {
         throw new Error("Token is missing");
     }
