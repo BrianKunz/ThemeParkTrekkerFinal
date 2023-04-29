@@ -25,7 +25,9 @@ exports.userService = {
                 Authorization: `Bearer ${token}`,
             },
         };
+        console.log(config);
         axios_1.default.defaults.headers.common = config.headers;
+        console.log(config.headers);
         return response.data;
     }),
     getCurrentUser: () => tslib_1.__awaiter(void 0, void 0, void 0, function* () {

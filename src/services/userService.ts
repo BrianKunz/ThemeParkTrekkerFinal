@@ -26,7 +26,11 @@ export const userService = {
       },
     };
 
+    console.log(config);
+
     axios.defaults.headers.common = config.headers;
+
+    console.log(config.headers);
 
     return response.data;
   },
