@@ -43,8 +43,6 @@ app.use(
   })
 );
 
-// app.use(sessionMiddleware);
-
 app.use("/users", userController);
 app.use("/posts", postController);
 app.use("/trips", tripController);
