@@ -18,21 +18,15 @@ const app = express();
 app.use(express.json());
 app.use(morgan("dev"));
 
-app.get("/favicon.ico", (_, res) => {
-  res.status(204).end();
-});
-
-app.use(express.static("./"));
-
-app.get("*", (_, res) => {
-  res.sendFile(path.join(__dirname, "..", "..", "public", "index.html"));
-});
-
 const corsOptions = {
   origin: "*",
 };
 
 app.use(cors(corsOptions));
+
+app.get("/favicon.ico", (_, res) => {
+  res.status(204).end();
+});
 
 app.use(
   session({
@@ -50,6 +44,12 @@ app.use("/comments", commentController);
 
 app.get("/", (_, res) => {
   res.redirect("/posts");
+});
+
+app.use(express.static("./"));
+
+app.get("/*", (_, res) => {
+  res.sendFile(path.join(__dirname, "..", "..", "public", "index.html"));
 });
 
 app.listen(PORT, () => {

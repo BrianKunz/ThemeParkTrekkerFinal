@@ -1,6 +1,7 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = {
   mode: process.env.NODE_ENV || "development",
@@ -30,7 +31,12 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        use: ["style-loader", "css-loader"],
+        test: /\.css$/,
+        use: [
+          MiniCssExtractPlugin.loader,
+          { loader: "css-loader", options: { importLoaders: 1 } },
+          "postcss-loader",
+        ],
       },
     ],
   },
@@ -42,6 +48,7 @@ module.exports = {
       inject: false,
     }),
     new CleanWebpackPlugin(),
+    new MiniCssExtractPlugin(),
   ],
 
   // Use webpack-dev-server for development

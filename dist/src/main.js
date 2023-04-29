@@ -17,17 +17,13 @@ const PORT = process.env.PORT || 3000;
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
 app.use((0, morgan_1.default)("dev"));
-app.get("/favicon.ico", (_, res) => {
-    res.status(204).end();
-});
-app.use(express_1.default.static("./"));
-app.get("*", (_, res) => {
-    res.sendFile(path_1.default.join(__dirname, "..", "..", "public", "index.html"));
-});
 const corsOptions = {
     origin: "*",
 };
 app.use((0, cors_1.default)(corsOptions));
+app.get("/favicon.ico", (_, res) => {
+    res.status(204).end();
+});
 app.use(session({
     secret: secret,
     resave: false,
@@ -40,6 +36,10 @@ app.use("/trips", trip_controller_1.default);
 app.use("/comments", comment_controller_1.default);
 app.get("/", (_, res) => {
     res.redirect("/posts");
+});
+app.use(express_1.default.static("./"));
+app.get("/*", (_, res) => {
+    res.sendFile(path_1.default.join(__dirname, "..", "..", "public", "index.html"));
 });
 app.listen(PORT, () => {
     console.log(`Server is starting 🚀 on PORT: ${PORT}`);

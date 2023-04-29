@@ -49,9 +49,7 @@ postController.get("/:id", async (req, res) => {
 // Create
 postController.post("/", async (req: Request, res: Response) => {
   const { title, image, description } = req.body;
-  const token = req.headers.authorization?.split(" ")[1];
-  console.log(req.headers.authorization);
-
+  const token = sessionStorage.getItem("accessToken");
   if (!token) {
     throw new Error("Token is missing");
   }
