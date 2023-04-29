@@ -10,6 +10,7 @@ export const userService = {
   },
   create: async (user: User): Promise<User> => {
     const response = await axios.post(`${baseURL}signup`, user);
+    console.log(response.data);
     return response.data;
   },
   login: async (user: User): Promise<User> => {

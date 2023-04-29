@@ -11,6 +11,7 @@ exports.userService = {
     }),
     create: (user) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
         const response = yield axios_1.default.post(`${baseURL}signup`, user);
+        console.log(response.data);
         return response.data;
     }),
     login: (user) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {

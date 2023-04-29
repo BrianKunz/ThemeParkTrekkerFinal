@@ -5,16 +5,12 @@ import jwt from "jsonwebtoken";
 
 const postController = express.Router();
 
-// interface JwtPayload {
-//   userId: number;
+// declare module "express-session" {
+//   interface Session {
+//     userId?: number;
+//     token?: string;
+//   }
 // }
-
-declare module "express-session" {
-  interface Session {
-    userId?: number;
-    token?: string;
-  }
-}
 
 // Index
 postController.get("/", async (req: Request, res: Response) => {
@@ -54,6 +50,7 @@ postController.get("/:id", async (req, res) => {
 postController.post("/", async (req: Request, res: Response) => {
   const { title, image, description } = req.body;
   const token = req.headers.authorization?.split(" ")[1];
+  console.log(req.headers.authorization);
 
   if (!token) {
     throw new Error("Token is missing");
