@@ -19,7 +19,7 @@ export default function PostList() {
         <div className="px-4 py-6 sm:px-0">
           <h1 className="text-4xl font-bold text-gray-900 mb-8">Post List</h1>
           <CreatePost />
-          {posts &&
+          {Array.isArray(posts) && posts.length > 0 ? (
             posts.map((post) => (
               <div
                 key={post.id}
@@ -41,7 +41,10 @@ export default function PostList() {
                   <p className="text-gray-700">{post.description}</p>
                 </div>
               </div>
-            ))}
+            ))
+          ) : (
+            <p>No posts found.</p>
+          )}
         </div>
       </div>
     </div>

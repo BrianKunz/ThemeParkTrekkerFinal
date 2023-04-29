@@ -4,6 +4,7 @@ const tslib_1 = require("tslib");
 const react_1 = tslib_1.__importDefault(require("react"));
 const client_1 = require("react-dom/client");
 const App_1 = tslib_1.__importDefault(require("./App"));
+require("./index.css");
 if (typeof window !== "undefined") {
     const rootElement = document.getElementById("root");
     if (rootElement) {

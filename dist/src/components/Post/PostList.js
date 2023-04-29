@@ -18,14 +18,13 @@ function PostList() {
             React.createElement("div", { className: "px-4 py-6 sm:px-0" },
                 React.createElement("h1", { className: "text-4xl font-bold text-gray-900 mb-8" }, "Post List"),
                 React.createElement(CreatePost_1.default, null),
-                posts &&
-                    posts.map((post) => (React.createElement("div", { key: post.id, className: "bg-white rounded-md shadow-md overflow-hidden mb-8" },
+                Array.isArray(posts) && posts.length > 0 ? (posts.map((post) => (React.createElement("div", { key: post.id, className: "bg-white rounded-md shadow-md overflow-hidden mb-8" },
+                    React.createElement(react_router_dom_1.Link, { to: `/posts/${post.id}` },
+                        React.createElement("img", { src: post.image, alt: post.title, className: "w-full h-64 object-cover" })),
+                    React.createElement("div", { className: "px-4 py-4" },
                         React.createElement(react_router_dom_1.Link, { to: `/posts/${post.id}` },
-                            React.createElement("img", { src: post.image, alt: post.title, className: "w-full h-64 object-cover" })),
-                        React.createElement("div", { className: "px-4 py-4" },
-                            React.createElement(react_router_dom_1.Link, { to: `/posts/${post.id}` },
-                                React.createElement("h2", { className: "text-xl font-bold text-gray-900 mb-2" }, post.title)),
-                            React.createElement("p", { className: "text-gray-700" }, post.description)))))))));
+                            React.createElement("h2", { className: "text-xl font-bold text-gray-900 mb-2" }, post.title)),
+                        React.createElement("p", { className: "text-gray-700" }, post.description)))))) : (React.createElement("p", null, "No posts found."))))));
 }
 exports.default = PostList;
 //# sourceMappingURL=PostList.js.map
