@@ -22,7 +22,7 @@ app.get("/favicon.ico", (_, res) => {
 });
 app.use(express_1.default.static(path_1.default.join(__dirname, "dist")));
 app.get("*", (_, res) => {
-    res.sendFile(path_1.default.join(__dirname, "..", "index.html"));
+    res.sendFile(path_1.default.join(__dirname, "public", "index.html"));
 });
 const corsOptions = {
     origin: "*",

@@ -58534,7 +58534,7 @@ const react_1 = tslib_1.__importDefault(__webpack_require__(/*! react */ "./node
 const client_1 = __webpack_require__(/*! react-dom/client */ "./node_modules/react-dom/client.js");
 const App_1 = tslib_1.__importDefault(__webpack_require__(/*! ./App */ "./src/App.tsx"));
 if (typeof window !== "undefined") {
-    const rootElement = document.getElementById("app");
+    const rootElement = document.getElementById("root");
     if (rootElement) {
         const root = (0, client_1.createRoot)(rootElement);
         root.render(react_1.default.createElement(react_1.default.StrictMode, null,
