@@ -38,6 +38,7 @@ postController.post("/", (req, res) => tslib_1.__awaiter(void 0, void 0, void 0,
     const { title, image, description } = req.body;
     const token = (_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(" ")[1];
     console.log("token:", token);
+    console.log(req.headers);
     if (!token) {
         throw new Error("Token is missing");
     }

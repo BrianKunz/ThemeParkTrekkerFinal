@@ -51,6 +51,7 @@ postController.post("/", async (req: Request, res: Response) => {
   const { title, image, description } = req.body;
   const token = req.headers.authorization?.split(" ")[1];
   console.log("token:", token);
+  console.log(req.headers);
 
   if (!token) {
     throw new Error("Token is missing");
