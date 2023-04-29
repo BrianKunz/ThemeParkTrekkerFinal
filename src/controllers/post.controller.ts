@@ -14,18 +14,15 @@ const postController = express.Router();
 // }
 
 // Index
-postController.get("/", async (req: Request, res: Response) => {
+postController.get("/", async (_, res) => {
   try {
     const { rows } = await pool.query<Post>("SELECT * FROM posts");
     res.json(rows);
   } catch (error) {
     console.error(error);
-    res
-      .status(500)
-      .json({ message: "Internal Server Error", request: req.url });
+    res.status(500).json({ message: "Internal Server Error" });
   }
 });
-
 // Show
 postController.get("/:id", async (req, res) => {
   const { id } = req.params;
@@ -51,7 +48,9 @@ postController.get("/:id", async (req, res) => {
 postController.post("/", async (req: Request, res: Response) => {
   const { title, image, description } = req.body;
   const config = useUserStore.getState().currentUser.config;
-  const token = config.headers.Authorization.split(" ")[1];
+  const token =
+    config && config.headers && config.headers.Authorization.split(" ")[1];
+
   console.log("token:", token);
   console.log(req.headers);
 

@@ -6,16 +6,14 @@ const database_1 = tslib_1.__importDefault(require("../../database"));
 const jsonwebtoken_1 = tslib_1.__importDefault(require("jsonwebtoken"));
 const useUserStore_1 = require("../stores/useUserStore");
 const postController = express_1.default.Router();
-postController.get("/", (req, res) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+postController.get("/", (_, res) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     try {
         const { rows } = yield database_1.default.query("SELECT * FROM posts");
         res.json(rows);
     }
     catch (error) {
         console.error(error);
-        res
-            .status(500)
-            .json({ message: "Internal Server Error", request: req.url });
+        res.status(500).json({ message: "Internal Server Error" });
     }
 }));
 postController.get("/:id", (req, res) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
@@ -37,7 +35,7 @@ postController.get("/:id", (req, res) => tslib_1.__awaiter(void 0, void 0, void 
 postController.post("/", (req, res) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     const { title, image, description } = req.body;
     const config = useUserStore_1.useUserStore.getState().currentUser.config;
-    const token = config.headers.Authorization.split(" ")[1];
+    const token = config && config.headers && config.headers.Authorization.split(" ")[1];
     console.log("token:", token);
     console.log(req.headers);
     if (!token) {
