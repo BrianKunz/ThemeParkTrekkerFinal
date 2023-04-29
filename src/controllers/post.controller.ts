@@ -11,7 +11,7 @@ interface AuthRequest extends Request {
 }
 
 const authorize = async (req: AuthRequest, res: Response, next: () => void) => {
-  const token = req.cookies.accessToken;
+  const token = req.headers.cookie?.split("accessToken=")[1];
   if (!token) {
     return res.status(401).json({ message: "Unauthorized" });
   }

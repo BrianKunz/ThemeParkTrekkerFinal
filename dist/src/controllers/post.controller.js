@@ -7,7 +7,8 @@ const jsonwebtoken_1 = tslib_1.__importDefault(require("jsonwebtoken"));
 const cookie_1 = require("../../helpers/cookie");
 const postController = express_1.default.Router();
 const authorize = (req, res, next) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-    const token = req.cookies.accessToken;
+    var _a;
+    const token = (_a = req.headers.cookie) === null || _a === void 0 ? void 0 : _a.split("accessToken=")[1];
     if (!token) {
         return res.status(401).json({ message: "Unauthorized" });
     }
@@ -57,9 +58,9 @@ postController.get("/:id", (req, res) => tslib_1.__awaiter(void 0, void 0, void 
     }
 }));
 postController.post("/", authorize, (req, res) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-    var _a;
+    var _b;
     const { title, image, description } = req.body;
-    const userId = (_a = req.user) === null || _a === void 0 ? void 0 : _a.id;
+    const userId = (_b = req.user) === null || _b === void 0 ? void 0 : _b.id;
     if (!userId) {
         return res.status(401).json({ message: "Unauthorized" });
     }
@@ -103,9 +104,9 @@ postController.put("/:id", (req, res) => tslib_1.__awaiter(void 0, void 0, void 
     return res.status(500).json({ message: "Internal Server Error" });
 }));
 postController.delete("/:id", (req, res) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-    var _b;
+    var _c;
     const { id } = req.params;
-    const token = (_b = req.headers.authorization) === null || _b === void 0 ? void 0 : _b.split(" ")[1];
+    const token = (_c = req.headers.authorization) === null || _c === void 0 ? void 0 : _c.split(" ")[1];
     if (!token) {
         throw new Error("Token is missing");
     }

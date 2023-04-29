@@ -6,7 +6,8 @@ const database_1 = tslib_1.__importDefault(require("../../database"));
 const jsonwebtoken_1 = tslib_1.__importDefault(require("jsonwebtoken"));
 const tripController = express_1.default.Router();
 const authorize = (req, res, next) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-    const token = req.cookies.accessToken;
+    var _a;
+    const token = (_a = req.headers.cookie) === null || _a === void 0 ? void 0 : _a.split("accessToken=")[1];
     if (!token) {
         return res.status(401).json({ message: "Unauthorized" });
     }
@@ -34,8 +35,8 @@ const authorize = (req, res, next) => tslib_1.__awaiter(void 0, void 0, void 0, 
     return next();
 });
 tripController.get("/", authorize, (req, res) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-    var _a;
-    const userId = (_a = req.user) === null || _a === void 0 ? void 0 : _a.id;
+    var _b;
+    const userId = (_b = req.user) === null || _b === void 0 ? void 0 : _b.id;
     try {
         const { rows } = yield database_1.default.query("SELECT * FROM trips WHERE user_id = $1", [userId]);
         res.json(rows);
@@ -46,10 +47,10 @@ tripController.get("/", authorize, (req, res) => tslib_1.__awaiter(void 0, void 
     }
 }));
 tripController.get("/:id", authorize, (req, res) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-    var _b;
+    var _c;
     const { id } = req.params;
     try {
-        const { rows } = yield database_1.default.query("SELECT * FROM trips WHERE id = $1 AND user_id = $2", [id, (_b = req.user) === null || _b === void 0 ? void 0 : _b.id]);
+        const { rows } = yield database_1.default.query("SELECT * FROM trips WHERE id = $1 AND user_id = $2", [id, (_c = req.user) === null || _c === void 0 ? void 0 : _c.id]);
         const trip = rows[0];
         if (!trip) {
             return res.status(404).json({ message: "Not Found" });
@@ -63,9 +64,9 @@ tripController.get("/:id", authorize, (req, res) => tslib_1.__awaiter(void 0, vo
     return res.status(500).json({ message: "Internal Server Error" });
 }));
 tripController.post("/", authorize, (req, res) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-    var _c;
+    var _d;
     const { title, date, start_date, end_date, flight } = req.body;
-    const userId = (_c = req.user) === null || _c === void 0 ? void 0 : _c.id;
+    const userId = (_d = req.user) === null || _d === void 0 ? void 0 : _d.id;
     try {
         const { rows: userRows } = yield database_1.default.query("SELECT * FROM users WHERE id = $1", [userId]);
         const user = userRows[0];
@@ -82,11 +83,11 @@ tripController.post("/", authorize, (req, res) => tslib_1.__awaiter(void 0, void
     return res.status(500).json({ message: "Internal Server Error" });
 }));
 tripController.put("/:id", authorize, (req, res) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-    var _d;
+    var _e;
     const { title, date, start_date, end_date, flight } = req.body;
     const { id } = req.params;
     try {
-        const { rows } = yield database_1.default.query("SELECT * FROM trips WHERE id = $1 AND user_id = $2", [id, (_d = req.user) === null || _d === void 0 ? void 0 : _d.id]);
+        const { rows } = yield database_1.default.query("SELECT * FROM trips WHERE id = $1 AND user_id = $2", [id, (_e = req.user) === null || _e === void 0 ? void 0 : _e.id]);
         const trip = rows[0];
         if (!trip) {
             return res.status(404).json({ message: "Not Found" });
@@ -101,10 +102,10 @@ tripController.put("/:id", authorize, (req, res) => tslib_1.__awaiter(void 0, vo
     return res.status(500).json({ message: "Internal Server Error" });
 }));
 tripController.delete("/:id", authorize, (req, res) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-    var _e;
+    var _f;
     const { id } = req.params;
     try {
-        const { rows } = yield database_1.default.query("SELECT * FROM trips WHERE id = $1 AND user_id = $2", [id, (_e = req.user) === null || _e === void 0 ? void 0 : _e.id]);
+        const { rows } = yield database_1.default.query("SELECT * FROM trips WHERE id = $1 AND user_id = $2", [id, (_f = req.user) === null || _f === void 0 ? void 0 : _f.id]);
         const trip = rows[0];
         if (!trip) {
             return res.status(404).json({ message: "Not Found" });
