@@ -44,7 +44,6 @@ postController.get("/:id", async (req, res) => {
   return res.status(500).json({ message: "Unknown Error" });
 });
 
-// Create
 postController.post("/", async (req: Request, res: Response) => {
   const { title, image, description } = req.body;
   const config = useUserStore.getState().currentUser.config;
@@ -55,8 +54,9 @@ postController.post("/", async (req: Request, res: Response) => {
   console.log("config: ", config);
   console.log("header:", req.headers);
 
-  if (!token) {
-    throw new Error("Token is missing");
+  if (!Boolean(token)) {
+    // Check if token is truthy
+    throw new Error("Unauthorized");
   }
 
   const secret = process.env.JWT_SECRET || "default-secret";

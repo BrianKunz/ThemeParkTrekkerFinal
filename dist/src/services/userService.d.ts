@@ -4,6 +4,7 @@ export declare const userService: {
     create: (user: User) => Promise<User>;
     login: (user: User) => Promise<{
         response: User;
+        userId: string;
         config: {
             headers: {
                 Authorization: string;

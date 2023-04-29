@@ -39,8 +39,8 @@ postController.post("/", (req, res) => tslib_1.__awaiter(void 0, void 0, void 0,
     console.log("token:", token);
     console.log("config: ", config);
     console.log("header:", req.headers);
-    if (!token) {
-        throw new Error("Token is missing");
+    if (!Boolean(token)) {
+        throw new Error("Unauthorized");
     }
     const secret = process.env.JWT_SECRET || "default-secret";
     try {

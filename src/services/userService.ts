@@ -17,6 +17,7 @@ export const userService = {
     user: User
   ): Promise<{
     response: User;
+    userId: string;
     config: { headers: { Authorization: string } };
   }> => {
     const response = await axios.post(`${baseURL}login`, user);
@@ -33,7 +34,7 @@ export const userService = {
 
     axios.defaults.headers.common = config.headers;
 
-    return { response: response.data, config: config };
+    return { response: response.data, userId, config: config };
   },
 
   getCurrentUser: async () => {

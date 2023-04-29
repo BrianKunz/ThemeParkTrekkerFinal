@@ -53139,7 +53139,7 @@ exports.userService = {
             },
         };
         axios_1.default.defaults.headers.common = config.headers;
-        return { response: response.data, config: config };
+        return { response: response.data, userId, config: config };
     }),
     getCurrentUser: () => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
         const userString = sessionStorage.getItem("user");
