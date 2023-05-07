@@ -23,6 +23,9 @@ export const userService = {
   }> => {
     const response = await axios.post(`${baseURL}login`, user);
 
+    // Log the entire response object
+    console.log("Response:", response);
+
     // Check if the 'user' object exists in the response data
     if (!response.data.user) {
       throw new Error("User not found in the response data.");
