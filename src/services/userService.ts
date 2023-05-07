@@ -22,6 +22,12 @@ export const userService = {
     config: { headers: { Authorization: string } };
   }> => {
     const response = await axios.post(`${baseURL}login`, user);
+
+    // Check if the 'user' object exists in the response data
+    if (!response.data.user) {
+      throw new Error("User not found in the response data.");
+    }
+
     const token = response.data.token;
     const userId = response.data.user.id;
 
