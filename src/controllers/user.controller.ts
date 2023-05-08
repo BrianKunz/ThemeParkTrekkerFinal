@@ -75,7 +75,10 @@ userController.post("/login", async (req, res) => {
 
     delete user.password;
 
-    res.json({ message: "Logged in successfully", user: user });
+    res.json({
+      message: "Logged in successfully",
+      user: { id: user.id, username: user.username },
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json(error);
