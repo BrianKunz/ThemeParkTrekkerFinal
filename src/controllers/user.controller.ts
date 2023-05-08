@@ -73,7 +73,9 @@ userController.post("/login", async (req, res) => {
     // Set cookie
     res.cookie("accessToken", token, { httpOnly: true });
 
-    res.json({ message: "Logged in successfully" });
+    delete user.password;
+
+    res.json({ message: "Logged in successfully", user: user });
   } catch (error) {
     console.error(error);
     res.status(500).json(error);
