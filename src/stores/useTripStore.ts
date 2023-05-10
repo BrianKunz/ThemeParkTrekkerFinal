@@ -8,6 +8,7 @@ interface TripStore {
   trips: Trip[];
   user: User | null;
   getAllTrips: () => Promise<void>;
+  fetchCurrentUserAndTrips: () => Promise<void>;
   getOneTrip: (id: string) => Promise<void>;
   createNewTrip: (trip: Trip) => Promise<void>;
   updateTrip: (trip: Trip) => Promise<void>;
@@ -27,6 +28,15 @@ export const useTripStore = create<TripStore>((set, get) => ({
         (trip: Trip) => user && trip.user === user.id
       );
       set({ trips: filteredTrips });
+    } catch (error) {
+      console.error(error);
+    }
+  },
+  fetchCurrentUserAndTrips: async () => {
+    try {
+      const user = await userService.getCurrentUser();
+      set({ user });
+      await get().getAllTrips();
     } catch (error) {
       console.error(error);
     }

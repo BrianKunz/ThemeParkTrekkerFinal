@@ -7,11 +7,15 @@ import CreateTrip from "./CreateTrip/CreateTrip";
 import NavBar from "../NavBar/NavBar";
 
 export default function TripList() {
-  const { trips, getAllTrips, user } = useTripStore();
+  const { trips, getAllTrips, user, fetchCurrentUserAndTrips } = useTripStore();
 
   useEffect(() => {
     getAllTrips();
   }, []);
+
+  useEffect(() => {
+    fetchCurrentUserAndTrips();
+  }, [fetchCurrentUserAndTrips]);
 
   return (
     <div className="bg-white mx-auto px-4 sm:px-6 lg:px-8">
