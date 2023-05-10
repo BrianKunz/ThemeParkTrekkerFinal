@@ -24,7 +24,8 @@ export function useCreateUser() {
       [name]: value,
     }));
   };
-  const handleSubmit = async () => {
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
     if (loading) {
       return;
     }
