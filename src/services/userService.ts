@@ -10,9 +10,15 @@ export const userService = {
     return response.data;
   },
   create: async (user: User): Promise<User> => {
-    const response = await axios.post(`${baseURL}signup`, user);
-    console.log(response.data);
-    return response.data;
+    try {
+      console.log("User data: ", user);
+      const response = await axios.post(`${baseURL}signup`, user);
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      console.error("Error signing up: ", error);
+      throw error;
+    }
   },
   login: async (
     user: User
