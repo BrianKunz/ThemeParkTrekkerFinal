@@ -3,6 +3,7 @@ import { postService } from "../services/postService";
 import { User } from "../entities/User.entity";
 import { Post } from "../entities/Post.entity";
 import { userService } from "../services/userService";
+import Cookies from "cookie";
 
 interface PostStore {
   posts: Post[];
@@ -40,7 +41,9 @@ export const usePostStore = create<PostStore>((set, get) => ({
   createNewPost: async (post) => {
     try {
       const { getAllPosts } = get();
-      const user = await userService.getCurrentUser();
+      const cookies = Cookies.parse(document.cookie);
+      const token = cookies["accessToken"];
+      const user = await userService.getCurrentUser(token);
       if (user) {
         await postService.create({ ...post, user });
         await getAllPosts();

@@ -4,6 +4,7 @@ import { Post } from "../entities/Post.entity";
 import { Comment } from "../entities/Comment.entity";
 import { User } from "../entities/User.entity";
 import { userService } from "../services/userService";
+import Cookies from "cookie";
 
 interface CommentStore {
   comments: Comment[];
@@ -31,7 +32,9 @@ export const useCommentStore = create<CommentStore>((set, get) => ({
   createNewComment: async (comment, post) => {
     try {
       const { getAllComments } = get();
-      const user = await userService.getCurrentUser();
+      const cookies = Cookies.parse(document.cookie);
+      const token = cookies["accessToken"];
+      const user = await userService.getCurrentUser(token);
       await commentService.create({
         ...comment,
         user,
