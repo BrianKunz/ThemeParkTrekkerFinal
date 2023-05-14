@@ -11,12 +11,23 @@ exports.userService = {
         return response.data;
     }),
     create: (user) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-        const response = yield axios_1.default.post(`${baseURL}signup`, user);
-        console.log(response.data);
-        return response.data;
+        try {
+            console.log("User data: ", user);
+            const response = yield axios_1.default.post(`${baseURL}signup`, user);
+            console.log(response.data);
+            return response.data;
+        }
+        catch (error) {
+            console.error("Error signing up: ", error);
+            throw error;
+        }
     }),
     login: (user) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
         const response = yield axios_1.default.post(`${baseURL}login`, user);
+        console.log("Response:", response);
+        if (!response.data.user) {
+            throw new Error("User not found in the response data.");
+        }
         const token = response.data.token;
         const userId = response.data.user.id;
         const options = { httpOnly: true };

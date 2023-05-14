@@ -4,7 +4,7 @@ export interface FormInputs {
     password: string;
 }
 export declare function useCreateUser(): {
-    handleSubmit: () => Promise<void>;
+    handleSubmit: (event: React.FormEvent) => Promise<void>;
     handleFormChange: import("react").ChangeEventHandler<HTMLInputElement>;
     formInputs: FormInputs;
 };

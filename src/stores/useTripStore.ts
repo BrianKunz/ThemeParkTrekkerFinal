@@ -3,6 +3,7 @@ import { tripService } from "../services/tripService";
 import { userService } from "../services/userService";
 import { User } from "../entities/User.entity";
 import { Trip } from "../entities/Trip.entity";
+import Cookies from "cookie";
 
 interface TripStore {
   trips: Trip[];
@@ -16,25 +17,32 @@ interface TripStore {
   setUser: (user: User | null) => void;
 }
 
+const cookies = Cookies.parse(document.cookie);
+const token = cookies["accessToken"];
+
 export const useTripStore = create<TripStore>((set, get) => ({
   trips: [],
   user: null,
   getAllTrips: async () => {
     try {
-      const { user } = get();
+      const user = token ? await userService.getCurrentUser(token) : null;
+      set({ user });
       console.log(user);
-      const trips = await tripService.getAll();
-      const filteredTrips = trips.filter(
-        (trip: Trip) => user && trip.user === user.id
-      );
-      set({ trips: filteredTrips });
+
+      if (user) {
+        const trips = await tripService.getAll();
+        const filteredTrips = trips.filter(
+          (trip: Trip) => trip.user === user.id
+        );
+        set({ trips: filteredTrips });
+      }
     } catch (error) {
       console.error(error);
     }
   },
   fetchCurrentUserAndTrips: async () => {
     try {
-      const user = await userService.getCurrentUser();
+      const user = await userService.getCurrentUser(token);
       set({ user });
       await get().getAllTrips();
     } catch (error) {
@@ -52,7 +60,7 @@ export const useTripStore = create<TripStore>((set, get) => ({
   createNewTrip: async (trip) => {
     try {
       const { getAllTrips } = get();
-      const user = await userService.getCurrentUser();
+      const user = await userService.getCurrentUser(token);
       await tripService.create({ ...trip, user: user ?? undefined });
       await getAllTrips();
     } catch (error) {

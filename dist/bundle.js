@@ -53095,10 +53095,10 @@ const Trip_1 = __webpack_require__(/*! ./Trip */ "./src/components/Trip/Trip.tsx
 const CreateTrip_1 = tslib_1.__importDefault(__webpack_require__(/*! ./CreateTrip/CreateTrip */ "./src/components/Trip/CreateTrip/CreateTrip.tsx"));
 const NavBar_1 = tslib_1.__importDefault(__webpack_require__(/*! ../NavBar/NavBar */ "./src/components/NavBar/NavBar.tsx"));
 function TripList() {
-    const { trips, getAllTrips, user } = (0, useTripStore_1.useTripStore)();
+    const { trips, user, fetchCurrentUserAndTrips } = (0, useTripStore_1.useTripStore)();
     (0, react_1.useEffect)(() => {
-        getAllTrips();
-    }, []);
+        fetchCurrentUserAndTrips();
+    }, [fetchCurrentUserAndTrips]);
     return (React.createElement("div", { className: "bg-white mx-auto px-4 sm:px-6 lg:px-8" },
         React.createElement(NavBar_1.default, null),
         React.createElement("h1", { className: "text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl" }, "Trips"),
@@ -53170,7 +53170,8 @@ function useCreateUser() {
     const handleFormChange = ({ target: { name, value }, }) => {
         setFormInputs((prevState) => (Object.assign(Object.assign({}, prevState), { [name]: value })));
     };
-    const handleSubmit = () => tslib_1.__awaiter(this, void 0, void 0, function* () {
+    const handleSubmit = (event) => tslib_1.__awaiter(this, void 0, void 0, function* () {
+        event.preventDefault();
         if (loading) {
             return;
         }
@@ -53272,12 +53273,10 @@ function useLoginUser() {
         }
         try {
             setLoadingLogin(true);
-            console.log("Form inputs: ", loginFormInputs);
             yield login({
                 username: loginFormInputs.username,
                 password: loginFormInputs.password,
             });
-            console.log("User logged in: ", loginFormInputs.username);
             setLoginFormInputs({
                 username: "",
                 password: "",
@@ -53448,12 +53447,23 @@ exports.userService = {
         return response.data;
     }),
     create: (user) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-        const response = yield axios_1.default.post(`${baseURL}signup`, user);
-        console.log(response.data);
-        return response.data;
+        try {
+            console.log("User data: ", user);
+            const response = yield axios_1.default.post(`${baseURL}signup`, user);
+            console.log(response.data);
+            return response.data;
+        }
+        catch (error) {
+            console.error("Error signing up: ", error);
+            throw error;
+        }
     }),
     login: (user) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
         const response = yield axios_1.default.post(`${baseURL}login`, user);
+        console.log("Response:", response);
+        if (!response.data.user) {
+            throw new Error("User not found in the response data.");
+        }
         const token = response.data.token;
         const userId = response.data.user.id;
         const options = { httpOnly: true };
@@ -53581,6 +53591,16 @@ exports.useTripStore = (0, zustand_1.create)((set, get) => ({
             const trips = yield tripService_1.tripService.getAll();
             const filteredTrips = trips.filter((trip) => user && trip.user === user.id);
             set({ trips: filteredTrips });
+        }
+        catch (error) {
+            console.error(error);
+        }
+    }),
+    fetchCurrentUserAndTrips: () => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const user = yield userService_1.userService.getCurrentUser();
+            set({ user });
+            yield get().getAllTrips();
         }
         catch (error) {
             console.error(error);

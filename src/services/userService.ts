@@ -56,22 +56,13 @@ export const userService = {
     return { response: response.data, userId, config: config };
   },
 
-  getCurrentUser: async () => {
-    const cookies = Cookies.parse(document.cookie);
-    const token = cookies["accessToken"];
-
-    if (token) {
-      // If the cookie exists, return the token
-      const config = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
-      axios.defaults.headers.common = config.headers;
-      return axios.get(`${baseURL}me`).then((response) => response.data);
-    }
-
-    // If the cookie does not exist, return null
-    return null;
+  getCurrentUser: async (token: string) => {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    axios.defaults.headers.common = config.headers;
+    return axios.get(`${baseURL}me`).then((response) => response.data);
   },
 };

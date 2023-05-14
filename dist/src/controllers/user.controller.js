@@ -52,7 +52,11 @@ userController.post("/login", (req, res) => tslib_1.__awaiter(void 0, void 0, vo
         const secret = process.env.JWT_SECRET || "default-secret";
         const token = jsonwebtoken_1.default.sign({ userId: user.id }, secret);
         res.cookie("accessToken", token, { httpOnly: true });
-        res.json({ message: "Logged in successfully" });
+        delete user.password;
+        res.json({
+            message: "Logged in successfully",
+            user: { id: user.id, username: user.username },
+        });
     }
     catch (error) {
         console.error(error);

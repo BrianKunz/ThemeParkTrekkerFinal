@@ -8,10 +8,10 @@ const Trip_1 = require("./Trip");
 const CreateTrip_1 = tslib_1.__importDefault(require("./CreateTrip/CreateTrip"));
 const NavBar_1 = tslib_1.__importDefault(require("../NavBar/NavBar"));
 function TripList() {
-    const { trips, getAllTrips, user } = (0, useTripStore_1.useTripStore)();
+    const { trips, user, fetchCurrentUserAndTrips } = (0, useTripStore_1.useTripStore)();
     (0, react_1.useEffect)(() => {
-        getAllTrips();
-    }, []);
+        fetchCurrentUserAndTrips();
+    }, [fetchCurrentUserAndTrips]);
     return (React.createElement("div", { className: "bg-white mx-auto px-4 sm:px-6 lg:px-8" },
         React.createElement(NavBar_1.default, null),
         React.createElement("h1", { className: "text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl" }, "Trips"),

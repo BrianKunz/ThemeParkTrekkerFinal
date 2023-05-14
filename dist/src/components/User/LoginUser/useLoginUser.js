@@ -20,12 +20,10 @@ function useLoginUser() {
         }
         try {
             setLoadingLogin(true);
-            console.log("Form inputs: ", loginFormInputs);
             yield login({
                 username: loginFormInputs.username,
                 password: loginFormInputs.password,
             });
-            console.log("User logged in: ", loginFormInputs.username);
             setLoginFormInputs({
                 username: "",
                 password: "",

@@ -20,6 +20,16 @@ exports.useTripStore = (0, zustand_1.create)((set, get) => ({
             console.error(error);
         }
     }),
+    fetchCurrentUserAndTrips: () => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const user = yield userService_1.userService.getCurrentUser();
+            set({ user });
+            yield get().getAllTrips();
+        }
+        catch (error) {
+            console.error(error);
+        }
+    }),
     getOneTrip: (id) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
         try {
             const trip = yield tripService_1.tripService.getOne(id);

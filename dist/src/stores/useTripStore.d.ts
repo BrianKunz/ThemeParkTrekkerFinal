@@ -4,6 +4,7 @@ interface TripStore {
     trips: Trip[];
     user: User | null;
     getAllTrips: () => Promise<void>;
+    fetchCurrentUserAndTrips: () => Promise<void>;
     getOneTrip: (id: string) => Promise<void>;
     createNewTrip: (trip: Trip) => Promise<void>;
     updateTrip: (trip: Trip) => Promise<void>;

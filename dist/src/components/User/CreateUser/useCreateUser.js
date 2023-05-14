@@ -16,7 +16,8 @@ function useCreateUser() {
     const handleFormChange = ({ target: { name, value }, }) => {
         setFormInputs((prevState) => (Object.assign(Object.assign({}, prevState), { [name]: value })));
     };
-    const handleSubmit = () => tslib_1.__awaiter(this, void 0, void 0, function* () {
+    const handleSubmit = (event) => tslib_1.__awaiter(this, void 0, void 0, function* () {
+        event.preventDefault();
         if (loading) {
             return;
         }
