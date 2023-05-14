@@ -7,11 +7,7 @@ import CreateTrip from "./CreateTrip/CreateTrip";
 import NavBar from "../NavBar/NavBar";
 
 export default function TripList() {
-  const { trips, getAllTrips, user, fetchCurrentUserAndTrips } = useTripStore();
-
-  useEffect(() => {
-    getAllTrips();
-  }, []);
+  const { trips, user, fetchCurrentUserAndTrips } = useTripStore();
 
   useEffect(() => {
     fetchCurrentUserAndTrips();
