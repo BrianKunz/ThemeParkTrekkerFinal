@@ -12,7 +12,11 @@ function CreateTrip() {
       <h1 className="text-2xl font-bold text-center mb-8 text-purple-700">
         Create a Trip
       </h1>
-      <form onSubmit={handleSubmit} method="POST" className="w-full max-w-md">
+      <form
+        onSubmit={(e) => handleSubmit(e)}
+        method="POST"
+        className="w-full max-w-md"
+      >
         <div className="mb-4">
           <label htmlFor="title" className="block text-gray-700 font-bold mb-2">
             Title

@@ -30,7 +30,8 @@ export function useCreateTrip() {
     }));
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     if (loading) {
       return;
     }
