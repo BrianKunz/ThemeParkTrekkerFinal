@@ -4,6 +4,16 @@ import Cookies from "cookie";
 
 const baseURL = "https://themeparktrekker.herokuapp.com/users/";
 
+// The getCookie function
+function getCookie(name: string) {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) {
+    return parts.pop()?.split(";").shift();
+  }
+  return null;
+}
+
 export const userService = {
   getAll: async (): Promise<User[]> => {
     const response = await axios.get(baseURL);
@@ -56,7 +66,8 @@ export const userService = {
     return { response: response.data, userId, config: config };
   },
 
-  getCurrentUser: async (token: string) => {
+  getCurrentUser: async () => {
+    const token = getCookie("accessToken");
     const config = {
       headers: {
         Authorization: `Bearer ${token}`,

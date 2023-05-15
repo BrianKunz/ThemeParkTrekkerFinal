@@ -3,7 +3,6 @@ import { tripService } from "../services/tripService";
 import { userService } from "../services/userService";
 import { User } from "../entities/User.entity";
 import { Trip } from "../entities/Trip.entity";
-import Cookies from "cookie";
 
 interface TripStore {
   trips: Trip[];
@@ -17,15 +16,12 @@ interface TripStore {
   setUser: (user: User | null) => void;
 }
 
-const cookies = Cookies.parse(document.cookie);
-const token = cookies["accessToken"];
-
 export const useTripStore = create<TripStore>((set, get) => ({
   trips: [],
   user: null,
   getAllTrips: async () => {
     try {
-      const user = token ? await userService.getCurrentUser(token) : null;
+      const user = await userService.getCurrentUser();
       set({ user });
       console.log(user);
 
@@ -42,7 +38,7 @@ export const useTripStore = create<TripStore>((set, get) => ({
   },
   fetchCurrentUserAndTrips: async () => {
     try {
-      const user = await userService.getCurrentUser(token);
+      const user = await userService.getCurrentUser();
       set({ user });
       await get().getAllTrips();
     } catch (error) {
@@ -60,7 +56,7 @@ export const useTripStore = create<TripStore>((set, get) => ({
   createNewTrip: async (trip) => {
     try {
       const { getAllTrips } = get();
-      const user = await userService.getCurrentUser(token);
+      const user = await userService.getCurrentUser();
       await tripService.create({ ...trip, user: user ?? undefined });
       await getAllTrips();
     } catch (error) {
