@@ -50,7 +50,7 @@ export const userService = {
     const userId = response.data.user.id;
 
     // Set the token in a cookie
-    const options = { httpOnly: false };
+    const options = { httpOnly: false, secure: true };
     const cookies = Cookies.serialize("accessToken", token, options);
     document.cookie = cookies;
 
