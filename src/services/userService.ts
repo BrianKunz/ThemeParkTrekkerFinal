@@ -67,6 +67,7 @@ export const userService = {
   getCurrentUser: async () => {
     const token = getCookie("accessToken");
     if (!token) {
+      console.log("Cookies:", document.cookie); // this will log all cookies, verify if your token is there
       throw new Error("No access token found in cookies.");
     }
     const config = {
