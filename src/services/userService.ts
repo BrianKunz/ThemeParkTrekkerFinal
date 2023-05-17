@@ -1,6 +1,5 @@
 import axios from "axios";
 import { User } from "../entities/User.entity";
-import Cookies from "cookie";
 
 const baseURL = "https://themeparktrekker.herokuapp.com/users/";
 
@@ -18,6 +17,7 @@ export const userService = {
     const response = await axios.get(baseURL);
     return response.data;
   },
+
   create: async (user: User): Promise<User> => {
     try {
       console.log("User data: ", user);
@@ -29,6 +29,7 @@ export const userService = {
       throw error;
     }
   },
+
   login: async (
     user: User
   ): Promise<{
@@ -50,9 +51,7 @@ export const userService = {
     const userId = response.data.user.id;
 
     // Set the token in a cookie
-    const options = { httpOnly: false, secure: true };
-    const cookies = Cookies.serialize("accessToken", token, options);
-    document.cookie = cookies;
+    document.cookie = `accessToken=${token}; path=/; httpOnly=false; secure=true`;
 
     const config = {
       headers: {
@@ -67,6 +66,9 @@ export const userService = {
 
   getCurrentUser: async () => {
     const token = getCookie("accessToken");
+    if (!token) {
+      throw new Error("No access token found in cookies.");
+    }
     const config = {
       headers: {
         Authorization: `Bearer ${token}`,
