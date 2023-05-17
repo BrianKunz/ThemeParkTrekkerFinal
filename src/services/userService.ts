@@ -51,7 +51,7 @@ export const userService = {
     const userId = response.data.user.id;
 
     // Set the token in a cookie
-    document.cookie = `accessToken=${token}; path=/; httpOnly=false; secure=true`;
+    document.cookie = `accessToken=${token}; path=/; httpOnly=false; secure=true; SameSite=None`;
 
     const config = {
       headers: {
