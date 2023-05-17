@@ -6,6 +6,7 @@ const baseURL = "https://themeparktrekker.herokuapp.com/trips/";
 export const tripService = {
   getAll: async (): Promise<Trip[]> => {
     const token = getCookie("accessToken");
+    console.log(getCookie("accesssToken"));
 
     const response = await axios.get(baseURL, {
       headers: {
@@ -17,6 +18,7 @@ export const tripService = {
 
   getOne: async (id: string): Promise<Trip> => {
     const token = getCookie("accessToken");
+    console.log(getCookie("accesssToken"));
 
     const response = await axios.get(baseURL + id, {
       headers: {
@@ -28,6 +30,7 @@ export const tripService = {
 
   create: async (trip: Trip): Promise<Trip> => {
     const token = getCookie("accessToken");
+    console.log(getCookie("accesssToken"));
 
     const response = await axios.post(baseURL, trip, {
       headers: {
