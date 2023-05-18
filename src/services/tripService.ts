@@ -5,8 +5,7 @@ const baseURL = "https://themeparktrekker.herokuapp.com/trips/";
 
 export const tripService = {
   getAll: async (): Promise<Trip[]> => {
-    const token = getCookie("accessToken");
-    console.log(getCookie("accesssToken"));
+    const token = window.localStorage.getItem("accessToken");
 
     const response = await axios.get(baseURL, {
       headers: {
@@ -17,8 +16,7 @@ export const tripService = {
   },
 
   getOne: async (id: string): Promise<Trip> => {
-    const token = getCookie("accessToken");
-    console.log(getCookie("accesssToken"));
+    const token = window.localStorage.getItem("accessToken");
 
     const response = await axios.get(baseURL + id, {
       headers: {
@@ -29,8 +27,7 @@ export const tripService = {
   },
 
   create: async (trip: Trip): Promise<Trip> => {
-    const token = getCookie("accessToken");
-    console.log(getCookie("accesssToken"));
+    const token = window.localStorage.getItem("accessToken");
 
     const response = await axios.post(baseURL, trip, {
       headers: {
@@ -41,7 +38,7 @@ export const tripService = {
   },
 
   update: async (id: string, trip: Trip): Promise<Trip> => {
-    const token = getCookie("accessToken");
+    const token = window.localStorage.getItem("accessToken");
 
     const response = await axios.put(baseURL + id, trip, {
       headers: {
@@ -52,7 +49,7 @@ export const tripService = {
   },
 
   delete: async (id: string): Promise<void> => {
-    const token = getCookie("accessToken");
+    const token = window.localStorage.getItem("accessToken");
 
     await axios.delete(baseURL + id, {
       headers: {
@@ -61,11 +58,3 @@ export const tripService = {
     });
   },
 };
-
-function getCookie(name: string) {
-  const match = document.cookie.match(new RegExp("(^| )" + name + "=([^;]+)"));
-  if (match) {
-    return match[2];
-  }
-  return null;
-}

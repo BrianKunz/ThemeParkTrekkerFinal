@@ -1,44 +1,55 @@
-import express, { Request, Response } from "express";
+import express, { Request, Response, NextFunction } from "express";
 import { Post } from "../entities/Post.entity";
 import pool from "../../database";
 import jwt from "jsonwebtoken";
-import { getCookie } from "../../helpers/cookie";
+import { User } from "../entities/User.entity";
 
 const postController = express.Router();
 
 interface AuthRequest extends Request {
-  user?: { id: string };
+  user?: User;
 }
 
-const authorize = async (req: AuthRequest, res: Response, next: () => void) => {
-  const token = req.headers.cookie?.split("accessToken=")[1];
-  if (!token) {
+// Authorization middleware
+const authorize = async (
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
     return res.status(401).json({ message: "Unauthorized" });
   }
 
+  const token = authHeader.split(" ")[1];
   const secret = process.env.JWT_SECRET || "default-secret";
 
   try {
-    const decodedToken = jwt.verify(token, secret) as { userId: string };
-    const userId = decodedToken.userId.toString();
+    // Decode the token and extract the user ID
+    const decodedToken = jwt.verify(token, secret);
+    if (typeof decodedToken === "object" && decodedToken.userId) {
+      const userId = decodedToken.userId;
 
-    const { rows } = await pool.query<{ id: string }>(
-      "SELECT * FROM users WHERE id = $1",
-      [userId]
-    );
-    const user = rows[0];
+      // Query the users table to check if the user exists
+      const { rows } = await pool.query<User>(
+        "SELECT * FROM users WHERE id = $1",
+        [userId]
+      );
+      const user = rows[0];
+      if (!user) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
 
-    if (!user) {
+      // Set the req.user property and call the next middleware function
+      req.user = user;
+      return next();
+    } else {
       return res.status(401).json({ message: "Unauthorized" });
     }
-
-    req.user = user;
-    next();
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Internal Server Error" });
+    return res.status(500).json({ message: "Internal Server Error" });
   }
-  return next();
 };
 
 // Index
@@ -78,10 +89,6 @@ postController.post("/", authorize, async (req: AuthRequest, res: Response) => {
   const { title, image, description } = req.body;
   const userId = req.user?.id;
 
-  console.log("title:", title);
-  console.log("image:", image);
-  console.log("description:", description);
-
   if (!userId) {
     return res.status(401).json({ message: "Unauthorized" });
   }
@@ -92,25 +99,24 @@ postController.post("/", authorize, async (req: AuthRequest, res: Response) => {
       [title, image, description, userId]
     );
     const post = postRows[0];
-
-    res.json(post);
+    return res.json(post);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Internal Server Error" });
+    return res.status(500).json({ message: "Internal Server Error" });
   }
-  return res.status(500).json({ message: "Internal Server Error" });
 });
 
 // Update
 postController.put("/:id", async (req: Request, res: Response) => {
   const { title, image, description } = req.body;
   const { id } = req.params;
-  const token = getCookie("accessToken");
+  const authHeader = req.headers.authorization;
 
-  if (!token) {
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
     return res.status(401).json({ message: "Unauthorized" });
   }
 
+  const token = authHeader.split(" ")[1];
   const secret = process.env.JWT_SECRET || "default-secret";
 
   try {
@@ -147,12 +153,13 @@ postController.put("/:id", async (req: Request, res: Response) => {
 // Delete
 postController.delete("/:id", async (req: Request, res: Response) => {
   const { id } = req.params;
-  const token = req.headers.authorization?.split(" ")[1];
+  const authHeader = req.headers.authorization;
 
-  if (!token) {
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
     throw new Error("Token is missing");
   }
 
+  const token = authHeader.split(" ")[1];
   const secret = process.env.JWT_SECRET || "default-secret";
 
   try {

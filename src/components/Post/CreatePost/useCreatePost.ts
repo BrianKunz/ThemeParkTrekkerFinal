@@ -37,11 +37,7 @@ export function useCreatePost() {
     try {
       setLoadingPosts(true);
       const postId = uuidv4();
-      if (
-        !currentUser ||
-        !currentUser.response ||
-        !currentUser.response.username
-      ) {
+      if (!currentUser || !currentUser.username) {
         throw new Error("Cannot create post without a valid user");
       }
       await createNewPost({
@@ -51,8 +47,9 @@ export function useCreatePost() {
         image: postFormInputs.image,
         description: postFormInputs.description,
         comments: [],
-        user: currentUser.response,
+        user: currentUser,
       });
+
       setPostFormInputs({
         created: new Date(),
         title: "",

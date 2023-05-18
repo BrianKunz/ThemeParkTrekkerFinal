@@ -1,6 +1,5 @@
 import axios from "axios";
 import { Comment } from "../entities/Comment.entity";
-import { getCookie } from "../../helpers/cookie";
 
 const baseURL = "https://themeparktrekker.herokuapp.com/comments/";
 
@@ -16,7 +15,7 @@ export const commentService = {
   },
 
   create: async (comment: Comment): Promise<Comment> => {
-    const token = getCookie("accessToken");
+    const token = window.localStorage.getItem("accessToken");
     const config = {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -27,7 +26,7 @@ export const commentService = {
   },
 
   update: async (id: string, comment: Comment): Promise<Comment> => {
-    const token = getCookie("accessToken");
+    const token = window.localStorage.getItem("accessToken");
     const config = {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -38,7 +37,7 @@ export const commentService = {
   },
 
   delete: async (id: string): Promise<void> => {
-    const token = getCookie("accessToken");
+    const token = window.localStorage.getItem("accessToken");
     const config = {
       headers: {
         Authorization: `Bearer ${token}`,

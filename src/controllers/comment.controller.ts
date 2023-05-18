@@ -4,7 +4,6 @@ import { Post } from "../entities/Post.entity";
 import { User } from "../entities/User.entity";
 import pool from "../../database";
 import jwt from "jsonwebtoken";
-import { getCookie } from "../../helpers/cookie";
 
 const commentController = express.Router();
 
@@ -18,12 +17,12 @@ const authorize = async (
   res: Response,
   next: NextFunction
 ) => {
-  const token = getCookie("accessToken");
-
-  if (!token) {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
     return res.status(401).json({ message: "Unauthorized" });
   }
 
+  const token = authHeader.split(" ")[1];
   const secret = process.env.JWT_SECRET || "default-secret";
 
   try {
@@ -44,15 +43,14 @@ const authorize = async (
 
       // Set the req.user property and call the next middleware function
       req.user = user;
-      next();
+      return next();
     } else {
       return res.status(401).json({ message: "Unauthorized" });
     }
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Internal Server Error" });
+    return res.status(500).json({ message: "Internal Server Error" });
   }
-  return res.status(500).json({ message: "Internal Server Error" });
 };
 
 // Show comments for a post
@@ -79,13 +77,14 @@ commentController.get(
 commentController.post(
   "/:postId",
   authorize,
-  async (req: AuthRequest, res: Response) => {
+  async (req: AuthRequest, res: Response): Promise<void> => {
     const { body } = req.body;
     const { postId } = req.params;
     const userId = req.user?.id;
 
     if (!userId) {
-      return res.status(401).json({ message: "Unauthorized" });
+      res.status(401).json({ message: "Unauthorized" });
+      return;
     }
 
     try {
@@ -95,7 +94,8 @@ commentController.post(
       ]);
 
       if (post.rowCount === 0) {
-        return res.status(404).json({ message: "Post not found" });
+        res.status(404).json({ message: "Post not found" });
+        return;
       }
 
       // Create the comment
@@ -104,10 +104,11 @@ commentController.post(
         [body, postId, userId]
       );
 
-      return res.json(result.rows[0]); // <-- Return the response object here
+      res.json(result.rows[0]);
     } catch (error) {
       console.error(error);
-      return res.status(500).json({ message: "Internal Server Error" }); // <-- Return the response object here
+      res.status(500).json({ message: "Internal Server Error" });
+      return; // Add this line
     }
   }
 );

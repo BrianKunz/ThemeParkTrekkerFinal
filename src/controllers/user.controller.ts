@@ -63,21 +63,15 @@ userController.post("/login", async (req, res) => {
       return;
     }
 
-    // Set isAdmin property
-    // const isAdmin = user.admin === true;
-
     // Generate JWT token
     const secret = process.env.JWT_SECRET || "default-secret";
     const token = jwt.sign({ userId: user.id }, secret);
-
-    // Set cookie
-    res.cookie("accessToken", token, { httpOnly: true });
-
     delete user.password;
 
     res.json({
       message: "Logged in successfully",
       user: { id: user.id, username: user.username },
+      token, // return the token in the response
     });
   } catch (error) {
     console.error(error);

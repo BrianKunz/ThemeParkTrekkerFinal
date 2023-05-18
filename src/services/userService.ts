@@ -3,15 +3,6 @@ import { User } from "../entities/User.entity";
 
 const baseURL = "https://themeparktrekker.herokuapp.com/users/";
 
-// The getCookie function
-function getCookie(name: string) {
-  const match = document.cookie.match(new RegExp("(^| )" + name + "=([^;]+)"));
-  if (match) {
-    return match[2];
-  }
-  return null;
-}
-
 export const userService = {
   getAll: async (): Promise<User[]> => {
     const response = await axios.get(baseURL);
@@ -50,8 +41,8 @@ export const userService = {
     const token = response.data.token;
     const userId = response.data.user.id;
 
-    // Set the token in a cookie
-    document.cookie = `accessToken=${token}; path=/; httpOnly=false; secure=true; SameSite=None`;
+    // Set the token in local storage
+    window.localStorage.setItem("accessToken", token);
 
     const config = {
       headers: {
@@ -65,10 +56,9 @@ export const userService = {
   },
 
   getCurrentUser: async () => {
-    const token = getCookie("accessToken");
+    const token = window.localStorage.getItem("accessToken");
     if (!token) {
-      console.log("Cookies:", document.cookie); // this will log all cookies, verify if your token is there
-      throw new Error("No access token found in cookies.");
+      throw new Error("No access token found in local storage.");
     }
     const config = {
       headers: {
