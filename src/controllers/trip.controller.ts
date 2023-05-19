@@ -20,9 +20,11 @@ const authorize = async (
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
     return res.status(401).json({ message: "Unauthorized" });
   }
+  console.log(authHeader);
 
   const token = authHeader.split(" ")[1];
   const secret = process.env.JWT_SECRET || "default-secret";
+  console.log(token);
 
   try {
     // Decode the token and extract the user ID
