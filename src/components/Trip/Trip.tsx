@@ -105,7 +105,9 @@ export const Trip: React.FC<TripProps> = ({
         name="start_date"
         type="date"
         onChange={handleChange}
-        value={start_date.toISOString().substr(0, 10)}
+        value={
+          start_date ? new Date(start_date).toISOString().substr(0, 10) : ""
+        }
       />
       <br />
       <input
@@ -113,7 +115,7 @@ export const Trip: React.FC<TripProps> = ({
         name="end_date"
         type="date"
         onChange={handleChange}
-        value={end_date.toISOString().substr(0, 10)}
+        value={end_date ? new Date(end_date).toISOString().substr(0, 10) : ""}
       />
       <br />
       <input
