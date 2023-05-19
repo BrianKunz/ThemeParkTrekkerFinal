@@ -23,7 +23,7 @@ export const useTripStore = create<TripStore>((set, get) => ({
     try {
       const user = await userService.getCurrentUser();
       set({ user });
-      console.log("user: ", user);
+      console.log("user: ", { user });
 
       if (user) {
         const trips = await tripService.getAll();
